@@ -97,6 +97,12 @@ public class MeshStudy : MonoBehaviour
 
         Debug.Log(dotCoords.Count);
 
+        List<Vector3> dotPositions = new List<Vector3>();
+        dotPositions.AddRange(dotCoords);
+
+
+
+
 
         for (int i = 0; i < dotCoords.Count; i++)
         {
@@ -105,7 +111,7 @@ public class MeshStudy : MonoBehaviour
             Renderer rend = vert.GetComponent<MeshRenderer>();
             vert.transform.name = "v" + (0 + i);
             vert.transform.parent = gameObject.transform;
-            vert.transform.position = vertices[i];
+            vert.transform.localPosition = dotPositions[i];
             vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             rend.material.color = Color.blue;
             vert.AddComponent<DragObject>();
