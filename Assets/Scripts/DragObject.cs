@@ -41,7 +41,7 @@ public class DragObject : MonoBehaviour
     void OnMouseDrag()
     {
         transform.position = GetMouseWorldPos() + mOffset;
-        mesh.DoAction(Index, transform.position);
+        mesh.DoAction(Index, transform.localPosition);
     }
 
 }

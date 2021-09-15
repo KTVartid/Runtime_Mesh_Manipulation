@@ -67,6 +67,8 @@ public class MeshStudy : MonoBehaviour
         InitMesh();
     }
 
+        HashSet<Vector3> dotCoords = new HashSet<Vector3>();
+
     public void InitMesh()
     {
         
@@ -86,39 +88,30 @@ public class MeshStudy : MonoBehaviour
         isCloned = true; //5
         Debug.Log("Init & Cloned");
 
-        HashSet<Vector3> dotCoords = new HashSet<Vector3>();
         Vector3 dotPos;
 
         for (int i = 0; i < vertices.Length; i++)
         {
             dotPos = vertices[i];
-            dotCoords.Add(dotPos);
+            if (dotCoords.Add(dotPos))
+            {
+                GameObject vert = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                Material vertMat = Resources.Load("vert_Mat", typeof(Material)) as Material;
+                Renderer rend = vert.GetComponent<MeshRenderer>();
+                vert.transform.name = "v" + (0 + i);
+                vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                vert.transform.parent = gameObject.transform;
+                vert.transform.localPosition = vertices[i];
+                rend.material.color = Color.blue;
+                vert.AddComponent<DragObject>();
+                vert.GetComponent<DragObject>().Init(i, this);
+            }
         }
 
         Debug.Log(dotCoords.Count);
 
-        List<Vector3> dotPositions = new List<Vector3>();
-        dotPositions.AddRange(dotCoords);
-
-
-
-
-
-        for (int i = 0; i < dotCoords.Count; i++)
-        {
-            GameObject vert = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            Material vertMat = Resources.Load("vert_Mat", typeof(Material)) as Material;
-            Renderer rend = vert.GetComponent<MeshRenderer>();
-            vert.transform.name = "v" + (0 + i);
-            vert.transform.parent = gameObject.transform;
-            vert.transform.localPosition = dotPositions[i];
-            vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-            rend.material.color = Color.blue;
-            vert.AddComponent<DragObject>();
-            vert.GetComponent<DragObject>().Init(i, this);
-        }
-
     }
+
 
 
     public void Reset()
@@ -194,7 +187,7 @@ public class MeshStudy : MonoBehaviour
             }
         }
         // return compiled list of int
-        Debug.Log(relatedVertices.Count);
+        //Debug.Log(relatedVertices.Count);
         return relatedVertices;
     }
 
@@ -217,12 +210,18 @@ public class MeshStudy : MonoBehaviour
 
     private void PullSimilarVertices(int index, Vector3 newPos)
     {
+
+
         Vector3 targetVertexPos = vertices[index]; //1
         List<int> relatedVertices = FindRelatedVertices(targetVertexPos, false); //2
+
+
+        //Debug.Log(targetVertexPos);
+
+
         foreach (int i in relatedVertices) //3
         {
             vertices[i] = newPos;
-
         }
         clonedMesh.vertices = vertices; //4
         clonedMesh.RecalculateNormals();

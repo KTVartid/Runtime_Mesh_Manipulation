@@ -43,8 +43,7 @@ public class ObjectViewer : MonoBehaviour
     // rotate
     public float distance = 10f;
     public float xspeed = 250f;
-    public float yspeed = 120f;
-    public float xsign = 1f;
+    public float yspeed = 12f;
     private float x;
     private float y;
     Vector3 prevPos = new Vector3();
@@ -69,20 +68,12 @@ public class ObjectViewer : MonoBehaviour
         Vector3 forward = mainCam.transform.TransformDirection(Vector3.up); // camera's transform
         Vector3 forward2 = target.transform.TransformDirection(Vector3.up); // target's transform
 
-        if (Vector3.Dot(forward, forward2) < 0)
-        {
-            xsign = -1;
-        }
-        else
-        {
-            xsign = 1;
-        }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(1))
         {
             if (prevPos != Vector3.zero && Input.mousePosition != prevPos)
             {
-                x += xsign * (Input.mousePosition.x - prevPos.x) * xspeed * 0.02f;
+                x += (Input.mousePosition.x - prevPos.x) * xspeed * 0.02f;
                 y -= (Input.mousePosition.y - prevPos.y) * yspeed * 0.02f;
                 DoRotation(x, y);
             }
