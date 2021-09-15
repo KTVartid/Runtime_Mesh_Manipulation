@@ -33,6 +33,8 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
+
 
 
 //[ExecuteInEditMode]
@@ -58,6 +60,8 @@ public class MeshStudy : MonoBehaviour
     public List<Vector3[]> allTriangleList;
     public bool moveVertexPoint = true;
 
+
+
     void Start()
     {
         InitMesh();
@@ -65,6 +69,7 @@ public class MeshStudy : MonoBehaviour
 
     public void InitMesh()
     {
+        
         meshFilter = GetComponent<MeshFilter>();
         originalMesh = meshFilter.sharedMesh; //1
         clonedMesh = new Mesh(); //2
@@ -81,19 +86,34 @@ public class MeshStudy : MonoBehaviour
         isCloned = true; //5
         Debug.Log("Init & Cloned");
 
+        HashSet<Vector3> dotCoords = new HashSet<Vector3>();
+        Vector3 dotPos;
 
-        for (int i = 0; i < (clonedMesh.vertices.Length); i++)
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            dotPos = vertices[i];
+            dotCoords.Add(dotPos);
+        }
+
+        Debug.Log(dotCoords.Count);
+
+
+        for (int i = 0; i < dotCoords.Count; i++)
         {
             GameObject vert = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            //Material vertMat = Resources.Load("Materials/vert_Mat", typeof(Material)) as Material;
             Material vertMat = Resources.Load("vert_Mat", typeof(Material)) as Material;
+            Renderer rend = vert.GetComponent<MeshRenderer>();
             vert.transform.name = "v" + (0 + i);
-            vert.transform.position = clonedMesh.vertices[i];
-            vert.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);
+            vert.transform.parent = gameObject.transform;
+            vert.transform.position = vertices[i];
+            vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            rend.material.color = Color.blue;
             vert.AddComponent<DragObject>();
             vert.GetComponent<DragObject>().Init(i, this);
         }
+
     }
+
 
     public void Reset()
     {
@@ -168,6 +188,7 @@ public class MeshStudy : MonoBehaviour
             }
         }
         // return compiled list of int
+        Debug.Log(relatedVertices.Count);
         return relatedVertices;
     }
 
@@ -190,13 +211,6 @@ public class MeshStudy : MonoBehaviour
 
     private void PullSimilarVertices(int index, Vector3 newPos)
     {
-        GameObject[] dots = new GameObject[(clonedMesh.vertices.Length)];
-
-        for (int i = 0; i < dots.Length; i++)
-        {
-            dots[i] = GameObject.Find("v" + (0 + i));
-        }
-
         Vector3 targetVertexPos = vertices[index]; //1
         List<int> relatedVertices = FindRelatedVertices(targetVertexPos, false); //2
         foreach (int i in relatedVertices) //3
