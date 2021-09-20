@@ -613,8 +613,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ExtensionMethods.cs" />
     <Compile Include="Assets\RW\Scripts\MeshStudy.cs" />
     <Compile Include="Assets\RW\Scripts\ObjectViewer.cs" />
+    <Compile Include="Assets\Scripts\BrushScr.cs" />
+    <Compile Include="Assets\Scripts\BrushTool.cs" />
     <Compile Include="Assets\Scripts\DragObject.cs" />
   </ItemGroup>
   <ItemGroup>

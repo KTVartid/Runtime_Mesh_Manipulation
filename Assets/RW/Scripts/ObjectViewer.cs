@@ -47,6 +47,17 @@ public class ObjectViewer : MonoBehaviour
     private float x;
     private float y;
     Vector3 prevPos = new Vector3();
+    GameObject brush;
+
+    void Start()
+    {
+        brush = new GameObject();
+        brush.name = "Brush";
+        brush.transform.localScale = new Vector3(0.5f, 0.5f, 0.01f);
+        brush.AddComponent<BrushTool>();
+        brush.AddComponent<LineRenderer>();
+    }
+
 
     // Use this for initialization
     public void Init()
@@ -55,6 +66,7 @@ public class ObjectViewer : MonoBehaviour
         distance = Vector3.Distance(mainCam.transform.position, target.transform.position);
         isReadyForTransform = true;
         Input.simulateMouseWithTouches = true;
+
     }
 
     void LateUpdate()
