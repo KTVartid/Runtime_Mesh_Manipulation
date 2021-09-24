@@ -6,28 +6,30 @@ using System;
 
 public class DragObject : MonoBehaviour
 {
-    private Vector3 mOffset;
-    private float mZCoord;
+    public Vector3 mOffset;
+    public float mZCoord;
 
     private MeshStudy mesh;
-    private int Index;
+    public int Index;
+
+    private MeshFilter meshFilter;
 
 
     public void Init(int Index, MeshStudy mesh)
     {
         this.mesh = mesh;
         this.Index = Index;
-
     }
 
     private void OnMouseDown()
     {
+
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         // Store offset = gameobject world pos - mouse world pos
         mOffset = gameObject.transform.position - GetMouseWorldPos();
     }
 
-    private Vector3 GetMouseWorldPos()
+    public Vector3 GetMouseWorldPos()
     {
         // pixel coordinates (x, y)
         Vector3 mousePoint = Input.mousePosition;

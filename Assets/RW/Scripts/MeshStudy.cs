@@ -99,6 +99,7 @@ public class MeshStudy : MonoBehaviour
                 Material vertMat = Resources.Load("vert_Mat", typeof(Material)) as Material;
                 Renderer rend = vert.GetComponent<MeshRenderer>();
                 vert.transform.name = "v" + (0 + i);
+                vert.transform.tag = "EP";
                 vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
                 vert.transform.parent = gameObject.transform;
                 vert.transform.localPosition = vertices[i];
@@ -108,7 +109,7 @@ public class MeshStudy : MonoBehaviour
             }
         }
 
-        Debug.Log(dotCoords.Count);
+        Debug.Log("current vertices: " + dotCoords.Count);
 
     }
 
@@ -138,6 +139,7 @@ public class MeshStudy : MonoBehaviour
     public void DoAction(int index, Vector3 localPos)
     {
         PullSimilarVertices(index, localPos);
+
     }
 
     // returns List of int that is related to the targetPt.
@@ -225,6 +227,8 @@ public class MeshStudy : MonoBehaviour
         }
         clonedMesh.vertices = vertices; //4
         clonedMesh.RecalculateNormals();
+        GetComponent<MeshCollider>().sharedMesh = null;
+        GetComponent<MeshCollider>().sharedMesh = clonedMesh;
     }
 
     // To test Reset function

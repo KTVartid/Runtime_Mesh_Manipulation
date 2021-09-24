@@ -56,6 +56,7 @@ public class ObjectViewer : MonoBehaviour
         brush.transform.localScale = new Vector3(0.5f, 0.5f, 0.01f);
         brush.AddComponent<BrushTool>();
         brush.AddComponent<LineRenderer>();
+        brush.AddComponent<SphereCollider>();
     }
 
 
