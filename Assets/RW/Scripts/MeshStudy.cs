@@ -100,6 +100,7 @@ public class MeshStudy : MonoBehaviour
                 Renderer rend = vert.GetComponent<MeshRenderer>();
                 vert.transform.name = "v" + (0 + i);
                 vert.transform.tag = "EP";
+                vert.layer = 9;
                 vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
                 vert.transform.parent = gameObject.transform;
                 vert.transform.localPosition = vertices[i];

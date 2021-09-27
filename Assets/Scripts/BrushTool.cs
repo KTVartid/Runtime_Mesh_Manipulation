@@ -23,10 +23,14 @@ public class BrushTool : MonoBehaviour
     public float Cy;
     public float Cz;
     public RaycastHit EPHit;
+    public RaycastHit hitData;
+    public Vector3 EPcoll = Vector3.zero;
+    public LayerMask layer;
+    public GameObject lastHit;
+    public Vector3 rayDir;
 
     public GameObject mouseSphere;
 
-    private DragObject drag;
     private MeshStudy mesh;
     private int Index;
 
@@ -62,23 +66,16 @@ public class BrushTool : MonoBehaviour
 
     void Update()
     {
-
-
         Transform camTf = cam.transform;
         // change radius
         float scrollDir = Input.mouseScrollDelta.y;
         radius += scrollDir * 0.02f / 2; // scroll speed
-
-
-
+        if (radius < 0)
+        {
+            radius = 0;
+        }
 
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-        //Ray ray = new Ray(camTf.position, camTf.forward);
-
-
-
-
-
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -96,8 +93,6 @@ public class BrushTool : MonoBehaviour
                 Vector3 rayDirection = -hitNormal;
                 return new Ray(rayOrigin, rayDirection);
             }
-
-
 
             // draw circle adapted to terrain
             const int circleDetail = 64;
@@ -155,13 +150,9 @@ public class BrushTool : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             EPrad.Clear();
-
         }
 
-
         EPColoring();
-
-
 
     }
 
@@ -175,10 +166,6 @@ public class BrushTool : MonoBehaviour
 
         return Camera.main.ScreenToWorldPoint(mousePoint);
     }
-
-
-
-
 
     public void PointsInRadiusCheck()
     {
@@ -195,7 +182,16 @@ public class BrushTool : MonoBehaviour
 
             if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius)
             {
-                EPrad.Add(EPoints[i]);
+                rayDir = (EPoints[i].transform.position - camera.transform.position).normalized;
+                Ray camRay = new Ray(camera.transform.position, rayDir);
+
+                if (Physics.Raycast(camRay, out hitData))
+                {
+                    if (hitData.collider.tag == "EP")
+                    {
+                        EPrad.Add(EPoints[i]);
+                    }
+                }
             }
         }
         Debug.Log("points in circle: " + EPrad.Count);
@@ -216,20 +212,27 @@ public class BrushTool : MonoBehaviour
 
             if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius)
             {
-                rend.material.color = Color.yellow;
-                if (Input.GetMouseButton(0))
+
+                rayDir = (EPoints[i].transform.position - camera.transform.position).normalized;
+                Ray camRay = new Ray(camera.transform.position, rayDir);
+
+                if (Physics.Raycast(camRay, out hitData))
                 {
-                    rend.material.color = Color.red;
+                    if (hitData.collider.tag == "EP")
+                    {
+                        Debug.DrawLine(camera.transform.position, hitData.collider.transform.position, Color.green);
+                        rend.material.color = Color.yellow;
+                        if (Input.GetMouseButton(0))
+                        {
+                            rend.material.color = Color.red;
+                        }
+                    }
                 }
             }
             else if (rend.material.color != Color.blue)
             {
                 rend.material.color = Color.blue;
             }
-
         }
     }
-
-
-
 }
