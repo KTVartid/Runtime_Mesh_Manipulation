@@ -613,12 +613,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ExtensionMethods.cs" />
     <Compile Include="Assets\RW\Scripts\MeshStudy.cs" />
     <Compile Include="Assets\RW\Scripts\ObjectViewer.cs" />
     <Compile Include="Assets\Scripts\BrushTool.cs" />
     <Compile Include="Assets\Scripts\DragObject.cs" />
+    <Compile Include="Assets\Scripts\ExtensionMethods.cs" />
+    <Compile Include="Assets\Scripts\ObjImporter.cs" />
     <Compile Include="Assets\Scripts\Wall.cs" />
+    <Compile Include="Assets\Scripts\loader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Cutout Wireframe.shader" />

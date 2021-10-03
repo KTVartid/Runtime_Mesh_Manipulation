@@ -13,6 +13,8 @@ public class BrushTool : MonoBehaviour
     Camera camera;
     LineRenderer line;
 
+    public List<GameObject> IObjects = new List<GameObject>();
+
     public List<GameObject> EPoints = new List<GameObject>();
     public List<GameObject> EPrad = new List<GameObject>();
     public GameObject EP;
@@ -42,8 +44,10 @@ public class BrushTool : MonoBehaviour
 
     void Start()
     {
-        GameObject m = GameObject.Find("monkeyhead");
-        mesh = m.GetComponent<MeshStudy>();
+        // eredeti
+
+        //GameObject m = GameObject.Find("monkeyhead");
+        //mesh = m.GetComponent<MeshStudy>();
 
         mouseSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         Renderer rend = mouseSphere.GetComponent<MeshRenderer>();
@@ -66,6 +70,22 @@ public class BrushTool : MonoBehaviour
 
     void Update()
     {
+
+        // teszt
+
+        foreach (GameObject m in GameObject.FindGameObjectsWithTag("IO"))
+        {
+            IObjects.Add(m);
+        }
+       // Debug.Log(IObjects.Count);
+
+        for (int i = 0; i < IObjects.Count; i++)
+        {
+            mesh = IObjects[i].GetComponent<MeshStudy>();
+        }
+        IObjects.Clear();
+
+
         Transform camTf = cam.transform;
         // change radius
         float scrollDir = Input.mouseScrollDelta.y;
@@ -178,23 +198,14 @@ public class BrushTool : MonoBehaviour
             Cx = EPHit.point.x;
             Cy = EPHit.point.y;
             Cz = EPHit.point.z;
-            Renderer rend = EPoints[i].GetComponent<MeshRenderer>();
+            rayDir = (EPoints[i].transform.position - camera.transform.position).normalized;
+            Ray camRay = new Ray(camera.transform.position, rayDir);
 
-            if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius)
+            if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius && Physics.Raycast(camRay, out hitData) && hitData.collider.tag == "EP")
             {
-                rayDir = (EPoints[i].transform.position - camera.transform.position).normalized;
-                Ray camRay = new Ray(camera.transform.position, rayDir);
-
-                if (Physics.Raycast(camRay, out hitData))
-                {
-                    if (hitData.collider.tag == "EP")
-                    {
-                        EPrad.Add(EPoints[i]);
-                    }
-                }
+                EPrad.Add(EPoints[i]);
             }
         }
-        Debug.Log("points in circle: " + EPrad.Count);
     }
 
     public void EPColoring()
@@ -209,24 +220,17 @@ public class BrushTool : MonoBehaviour
             Cy = EPHit.point.y;
             Cz = EPHit.point.z;
             Renderer rend = EPoints[i].GetComponent<MeshRenderer>();
+            rayDir = (EPoints[i].transform.position - camera.transform.position).normalized;
+            Ray camRay = new Ray(camera.transform.position, rayDir);
 
-            if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius)
+            if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius && Physics.Raycast(camRay, out hitData) && hitData.collider.tag == "EP")
             {
+                Debug.DrawLine(camera.transform.position, hitData.collider.transform.position, Color.green);
+                rend.material.color = Color.yellow;
 
-                rayDir = (EPoints[i].transform.position - camera.transform.position).normalized;
-                Ray camRay = new Ray(camera.transform.position, rayDir);
-
-                if (Physics.Raycast(camRay, out hitData))
+                if (Input.GetMouseButton(0))
                 {
-                    if (hitData.collider.tag == "EP")
-                    {
-                        Debug.DrawLine(camera.transform.position, hitData.collider.transform.position, Color.green);
-                        rend.material.color = Color.yellow;
-                        if (Input.GetMouseButton(0))
-                        {
-                            rend.material.color = Color.red;
-                        }
-                    }
+                    rend.material.color = Color.red;
                 }
             }
             else if (rend.material.color != Color.blue)
