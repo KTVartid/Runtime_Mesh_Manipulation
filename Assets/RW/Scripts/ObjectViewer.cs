@@ -49,8 +49,11 @@ public class ObjectViewer : MonoBehaviour
     Vector3 prevPos = new Vector3();
     GameObject brush;
 
+    BrushTool _BrushTool;
+
     void Start()
     {
+
         brush = new GameObject();
         brush.name = "Brush";
         brush.transform.localScale = new Vector3(0.5f, 0.5f, 0.01f);
@@ -70,8 +73,14 @@ public class ObjectViewer : MonoBehaviour
 
     }
 
+    void Update()
+    {
+
+    }
+
     void LateUpdate()
     {
+
         if (!isReadyForTransform)
         {
             return;

@@ -8,6 +8,10 @@ public class BrushTool : MonoBehaviour
 {
     [Range(0.01f, 15f)]
     public float radius = 0.3f;
+    private int zero = 0;
+
+    Material invisible;
+
 
     GameObject cam;
     Camera camera;
@@ -33,6 +37,8 @@ public class BrushTool : MonoBehaviour
 
     public GameObject mouseSphere;
 
+    GameObject m;
+
     private MeshStudy mesh;
     private int Index;
 
@@ -44,52 +50,42 @@ public class BrushTool : MonoBehaviour
 
     void Start()
     {
-        // eredeti
-
-        //GameObject m = GameObject.Find("monkeyhead");
-        //mesh = m.GetComponent<MeshStudy>();
-
         mouseSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        mouseSphere.transform.name = "mouseSphere";
+        mouseSphere.transform.position = new Vector3(999,999,999);
         Renderer rend = mouseSphere.GetComponent<MeshRenderer>();
         Material mouseMat = Resources.Load("mouseMat", typeof(Material)) as Material;
         rend.material = mouseMat;
         mouseSphere.layer = 2;
+
+        invisible = Resources.Load("invisible", typeof(Material)) as Material;
 
         cam = GameObject.Find("Main Camera");
         camera = cam.GetComponent<Camera>();
         line = gameObject.GetComponent<LineRenderer>();
         line.loop = true;
 
-        foreach (GameObject points in GameObject.FindGameObjectsWithTag("EP"))
-        {
-            EPoints.Add(points);
-        }
-        Debug.Log("EP found: " + EPoints.Count);
     }
 
 
     void Update()
     {
 
-        // teszt
 
-        foreach (GameObject m in GameObject.FindGameObjectsWithTag("IO"))
-        {
-            IObjects.Add(m);
-        }
-       // Debug.Log(IObjects.Count);
+        m = GameObject.FindGameObjectWithTag("Active");
 
-        for (int i = 0; i < IObjects.Count; i++)
-        {
-            mesh = IObjects[i].GetComponent<MeshStudy>();
-        }
-        IObjects.Clear();
+        createEP();
 
 
         Transform camTf = cam.transform;
         // change radius
         float scrollDir = Input.mouseScrollDelta.y;
+
+
         radius += scrollDir * 0.02f / 2; // scroll speed
+
+
+
         if (radius < 0)
         {
             radius = 0;
@@ -135,11 +131,19 @@ public class BrushTool : MonoBehaviour
                 }
                 line.SetPosition(i, ringPoints[i]);
                 line.SetWidth(0.01f, 0.005f);
+                line.material = invisible;
             }
         }
 
         mouseSphere.transform.localPosition = EPHit.point;
-        mouseSphere.transform.localScale = new Vector3(1, 1, 1) * (radius * 2);
+        if (Input.GetKey(KeyCode.LeftAlt))
+        {
+            mouseSphere.transform.localScale = new Vector3(1, 1, 1) * (radius * 2);
+        }
+        else
+        {
+            mouseSphere.transform.localScale = new Vector3(1, 1, 1) * 0;
+        }
 
         //check the points inside the sphere
 
@@ -174,6 +178,19 @@ public class BrushTool : MonoBehaviour
 
         EPColoring();
 
+        EPoints.Clear();
+    }
+
+    private void createEP()
+    {
+        mesh = m.GetComponent<MeshStudy>();
+
+        foreach (GameObject points in GameObject.FindGameObjectsWithTag("EP"))
+        {
+            EPoints.Add(points);
+        }
+        Debug.Log("EP found: " + EPoints.Count);
+
     }
 
     public Vector3 GetMouseWorldPos()
@@ -200,11 +217,14 @@ public class BrushTool : MonoBehaviour
             Cz = EPHit.point.z;
             rayDir = (EPoints[i].transform.position - camera.transform.position).normalized;
             Ray camRay = new Ray(camera.transform.position, rayDir);
-
-            if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius && Physics.Raycast(camRay, out hitData) && hitData.collider.tag == "EP")
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
-                EPrad.Add(EPoints[i]);
+                if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius && Physics.Raycast(camRay, out hitData) && hitData.collider.tag == "EP")
+                {
+                    EPrad.Add(EPoints[i]);
+                }
             }
+
         }
     }
 
@@ -223,17 +243,25 @@ public class BrushTool : MonoBehaviour
             rayDir = (EPoints[i].transform.position - camera.transform.position).normalized;
             Ray camRay = new Ray(camera.transform.position, rayDir);
 
-            if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius && Physics.Raycast(camRay, out hitData) && hitData.collider.tag == "EP")
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
-                Debug.DrawLine(camera.transform.position, hitData.collider.transform.position, Color.green);
-                rend.material.color = Color.yellow;
 
-                if (Input.GetMouseButton(0))
+                if (((EPx - Cx) * (EPx - Cx)) + ((EPy - Cy) * (EPy - Cy)) + ((EPz - Cz) * (EPz - Cz)) <= radius * radius && Physics.Raycast(camRay, out hitData) && hitData.collider.tag == "EP")
                 {
-                    rend.material.color = Color.red;
-                }
+                    Debug.DrawLine(camera.transform.position, hitData.collider.transform.position, Color.green);
+                    rend.material.color = Color.yellow;
+
+                    if (Input.GetMouseButton(0))
+                    {
+                        rend.material.color = Color.red;
+                    }
             }
             else if (rend.material.color != Color.blue)
+            {
+                rend.material.color = Color.blue;
+            }
+            }
+            else
             {
                 rend.material.color = Color.blue;
             }

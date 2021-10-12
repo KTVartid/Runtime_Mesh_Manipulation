@@ -2,11 +2,13 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEditor;
+using UnityEditorInternal;
 
 public class loader : MonoBehaviour
 {
     public string target;
     Material mat;
+    Material originalMat;
     private MeshStudy mesh;
 
     void Start()
@@ -19,6 +21,8 @@ public class loader : MonoBehaviour
     {
         GameObject go = new GameObject();
         go.transform.name = "loadedObject";
+        go.transform.tag = "IO";
+        go.layer = 10;
         go.transform.localScale = new Vector3(0.0000005f, 0.0000005f, 0.0000005f);
         Mesh holderMesh = new Mesh();
         ObjImporter newMesh = new ObjImporter();
@@ -28,8 +32,9 @@ public class loader : MonoBehaviour
         MeshRenderer renderer = go.AddComponent<MeshRenderer>();
         filter.mesh = holderMesh;
         go.AddComponent<MeshCollider>();
-        renderer.material = mat;
         go.AddComponent<MeshStudy>();
+        renderer.material = mat;
+        //renderer.material = originalMat;
 
     }
 }
