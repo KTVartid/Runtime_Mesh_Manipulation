@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Rendering;
 using UnityEditor;
 
@@ -11,7 +12,6 @@ public class BrushTool : MonoBehaviour
     private int zero = 0;
 
     Material invisible;
-
 
     GameObject cam;
     Camera camera;
@@ -38,6 +38,7 @@ public class BrushTool : MonoBehaviour
     public GameObject mouseSphere;
 
     GameObject m;
+    public float scale;
 
     private MeshStudy mesh;
     private int Index;
@@ -47,12 +48,11 @@ public class BrushTool : MonoBehaviour
     public Vector3 mOld;
     public Vector3 mNow;
 
-
     void Start()
     {
         mouseSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         mouseSphere.transform.name = "mouseSphere";
-        mouseSphere.transform.position = new Vector3(999,999,999);
+        mouseSphere.transform.position = new Vector3(999, 999, 999);
         Renderer rend = mouseSphere.GetComponent<MeshRenderer>();
         Material mouseMat = Resources.Load("mouseMat", typeof(Material)) as Material;
         rend.material = mouseMat;
@@ -64,27 +64,29 @@ public class BrushTool : MonoBehaviour
         camera = cam.GetComponent<Camera>();
         line = gameObject.GetComponent<LineRenderer>();
         line.loop = true;
-
     }
 
 
     void Update()
     {
-
-
+        scale = GameObject.Find("Slider").GetComponent<Slider>().value;
+        if (Input.GetMouseButtonUp(0))
+        {
+            GameObject.Find("Slider").GetComponent<Slider>().value = 1;
+        }
         m = GameObject.FindGameObjectWithTag("Active");
+        if (m != null)
+        {
+            m.transform.localScale = m.transform.localScale * scale;
+        }
 
         createEP();
-
 
         Transform camTf = cam.transform;
         // change radius
         float scrollDir = Input.mouseScrollDelta.y;
 
-
         radius += scrollDir * 0.02f / 2; // scroll speed
-
-
 
         if (radius < 0)
         {
@@ -155,7 +157,6 @@ public class BrushTool : MonoBehaviour
 
         if (Input.GetMouseButton(0) && EPrad.Count != 0)
         {
-
             mNow = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 mDelta = mNow - mOld;
             mOld = mNow;
@@ -168,7 +169,6 @@ public class BrushTool : MonoBehaviour
                 Index = EPrad[i].GetComponent<DragObject>().Index;
                 mesh.DoAction(Index, EPrad[i].transform.localPosition);
             }
-
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -183,14 +183,15 @@ public class BrushTool : MonoBehaviour
 
     private void createEP()
     {
-        mesh = m.GetComponent<MeshStudy>();
+        if (m != null)
+        {
+            mesh = m.GetComponent<MeshStudy>();
+        }
 
         foreach (GameObject points in GameObject.FindGameObjectsWithTag("EP"))
         {
             EPoints.Add(points);
         }
-        Debug.Log("EP found: " + EPoints.Count);
-
     }
 
     public Vector3 GetMouseWorldPos()
@@ -255,11 +256,11 @@ public class BrushTool : MonoBehaviour
                     {
                         rend.material.color = Color.red;
                     }
-            }
-            else if (rend.material.color != Color.blue)
-            {
-                rend.material.color = Color.blue;
-            }
+                }
+                else if (rend.material.color != Color.blue)
+                {
+                    rend.material.color = Color.blue;
+                }
             }
             else
             {

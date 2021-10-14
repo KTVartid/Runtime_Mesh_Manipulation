@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ClickOn : MonoBehaviour
 {
-
     [SerializeField]
     private Material selected;
     [SerializeField]
@@ -25,5 +24,4 @@ public class ClickOn : MonoBehaviour
         foreach (Transform child in transform)
             child.gameObject.SetActive(true);
     }
-
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEditor;
-using UnityEditorInternal;
+//using UnityEditorInternal;
 
 public class loader : MonoBehaviour
 {
@@ -33,6 +33,7 @@ public class loader : MonoBehaviour
         filter.mesh = holderMesh;
         go.AddComponent<MeshCollider>();
         go.AddComponent<MeshStudy>();
+        go.AddComponent<ClickOn>();
         renderer.material = mat;
         //renderer.material = originalMat;
 

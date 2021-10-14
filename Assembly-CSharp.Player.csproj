@@ -623,6 +623,7 @@
     <Compile Include="Assets\Scripts\SelectTool.cs" />
     <Compile Include="Assets\Scripts\Wall.cs" />
     <Compile Include="Assets\Scripts\loader.cs" />
+    <Compile Include="Assets\Scripts\pointerEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Cutout Wireframe.shader" />
