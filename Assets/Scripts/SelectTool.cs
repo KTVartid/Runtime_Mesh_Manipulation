@@ -22,6 +22,7 @@ public class SelectTool : MonoBehaviour
         Deactivate();
     }
 
+
     void Update()
     {
         dragSlider = GameObject.Find("Slider").GetComponent<pointerEvent>().selected;
@@ -30,7 +31,6 @@ public class SelectTool : MonoBehaviour
         {
             if (dragSlider == true)
             {
-                Debug.Log("hit");
             }
             else
             {
@@ -51,7 +51,7 @@ public class SelectTool : MonoBehaviour
         objects.Clear();
     }
 
-    private void Deactivate()
+    public void Deactivate()
     {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Active"))
         {

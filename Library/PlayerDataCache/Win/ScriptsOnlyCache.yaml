@@ -7,6 +7,7 @@ ScriptsOnlyBuild:
     - SelectTool
     - Wall
     - loader
+    - pointerEvent
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
     - UnityEditor.Tilemaps.GridPaletteBrushes
@@ -26,6 +27,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
+    - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
   sceneClasses:
     Assets/Scenes/SampleScene.unity:
@@ -47,6 +49,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
+    - Class: 58
+      Script: {instanceID: 0}
     - Class: 64
       Script: {instanceID: 0}
     - Class: 81
@@ -58,31 +62,35 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11276}
+      Script: {instanceID: 11268}
     - Class: 114
-      Script: {instanceID: 11450}
+      Script: {instanceID: 11278}
     - Class: 114
-      Script: {instanceID: 11490}
+      Script: {instanceID: 11452}
     - Class: 114
-      Script: {instanceID: 11614}
+      Script: {instanceID: 11492}
     - Class: 114
-      Script: {instanceID: 11912}
+      Script: {instanceID: 11616}
     - Class: 114
-      Script: {instanceID: 12330}
+      Script: {instanceID: 11914}
     - Class: 114
-      Script: {instanceID: 12452}
+      Script: {instanceID: 12332}
     - Class: 114
-      Script: {instanceID: 12850}
+      Script: {instanceID: 12454}
     - Class: 114
-      Script: {instanceID: 12948}
+      Script: {instanceID: 12852}
     - Class: 114
-      Script: {instanceID: 12986}
+      Script: {instanceID: 12950}
     - Class: 114
-      Script: {instanceID: 13066}
+      Script: {instanceID: 12988}
     - Class: 114
-      Script: {instanceID: 13170}
+      Script: {instanceID: 13068}
     - Class: 114
-      Script: {instanceID: 13242}
+      Script: {instanceID: 13172}
+    - Class: 114
+      Script: {instanceID: 13244}
+    - Class: 114
+      Script: {instanceID: 13276}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -102,6 +110,12 @@ ScriptsOnlyBuild:
     - Class: 258
       Script: {instanceID: 0}
   scriptHashData:
+  - hash:
+      serializedVersion: 2
+      Hash: 9ebcc24ed1ba310b9e584458a4dfc43e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: pointerEvent
   - hash:
       serializedVersion: 2
       Hash: 4bc4346a71a8df53a6b106f68ef3a190
@@ -332,7 +346,7 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAnimator
   - hash:
       serializedVersion: 2
-      Hash: aac31611c89768af234f9d574b64ed2f
+      Hash: e26c025cda1d58f1ddc4408c2871fc96
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BrushTool

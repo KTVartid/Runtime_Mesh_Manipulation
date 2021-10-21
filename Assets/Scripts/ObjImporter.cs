@@ -57,7 +57,7 @@ public class ObjImporter
 
         mesh.vertices = newVerts;
         mesh.uv = newUVs;
-        mesh.normals = newNormals;
+        //mesh.normals = newNormals;
         mesh.triangles = newMesh.triangles;
 
         mesh.RecalculateBounds();

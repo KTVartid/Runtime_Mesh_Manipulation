@@ -88,20 +88,6 @@ public class MeshInspector : Editor
     {
         DrawDefaultInspector();
         mesh = target as MeshStudy;
-
-        if (GUILayout.Button("Reset")) //1
-        {
-            mesh.Reset(); //2
-        }
-
-        // For testing Reset function
-        if (mesh.isCloned)
-        {
-            if (GUILayout.Button("Test Edit"))
-            {
-                mesh.EditMesh();
-            }
-        }
     }
 
 

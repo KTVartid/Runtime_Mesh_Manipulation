@@ -14,6 +14,8 @@ public class ClickOn : MonoBehaviour
     void Start()
     {
         myRend = GetComponent<MeshRenderer>();
+        selected = Resources.Load("mesh", typeof(Material)) as Material;
+        unselected = Resources.Load("unSelected", typeof(Material)) as Material;
     }
 
     public void Activate()

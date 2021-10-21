@@ -56,22 +56,21 @@ public class MeshStudy : MonoBehaviour
     public float radius = 0.2f;
     public float pull = 0.3f;
     public float handleSize = 0.03f;
-    public List<int>[] connectedVertices;
+    //public List<int>[] connectedVertices;
     public List<Vector3[]> allTriangleList;
     public bool moveVertexPoint = true;
-
-
 
     void Start()
     {
         InitMesh();
+
+
     }
 
-        HashSet<Vector3> dotCoords = new HashSet<Vector3>();
+    HashSet<Vector3> dotCoords = new HashSet<Vector3>();
 
     public void InitMesh()
     {
-        
         meshFilter = GetComponent<MeshFilter>();
         originalMesh = meshFilter.sharedMesh; //1
         clonedMesh = new Mesh(); //2
@@ -86,7 +85,7 @@ public class MeshStudy : MonoBehaviour
         vertices = clonedMesh.vertices; //4
         triangles = clonedMesh.triangles;
         isCloned = true; //5
-        Debug.Log("Init & Cloned");
+        //Debug.Log("Init & Cloned");
 
         Vector3 dotPos;
 
@@ -116,35 +115,26 @@ public class MeshStudy : MonoBehaviour
 
 
 
-    public void Reset()
-    {
-        if (clonedMesh != null && originalMesh != null) //1
-        {
-            clonedMesh.vertices = originalMesh.vertices; //2
-            clonedMesh.triangles = originalMesh.triangles;
-            clonedMesh.normals = originalMesh.normals;
-            clonedMesh.uv = originalMesh.uv;
-            meshFilter.mesh = clonedMesh; //3
 
-            vertices = clonedMesh.vertices; //4
-            triangles = clonedMesh.triangles;
-        }
-    }
+    //public void GetConnectedVertices()
+    //{
+    //    connectedVertices = new List<int>[vertices.Length];
 
-    public void GetConnectedVertices()
-    {
-        connectedVertices = new List<int>[vertices.Length];
-
-    }
+    //}
 
     public void DoAction(int index, Vector3 localPos)
     {
         PullSimilarVertices(index, localPos);
+        PullConnectedVertices(index, localPos);
 
+        clonedMesh.vertices = vertices; //4
+        clonedMesh.RecalculateNormals();
+        GetComponent<MeshCollider>().sharedMesh = null;
+        GetComponent<MeshCollider>().sharedMesh = clonedMesh;
     }
 
     // returns List of int that is related to the targetPt.
-    private List<int> FindRelatedVertices(Vector3 targetPt, bool findConnected)
+    public List<int> FindRelatedVertices(Vector3 targetPt, bool findConnected)
     {
         // list of int
         List<int> relatedVertices = new List<int>();
@@ -194,50 +184,78 @@ public class MeshStudy : MonoBehaviour
         return relatedVertices;
     }
 
-    public void BuildTriangleList()
+    public void PullSimilarVertices(int index, Vector3 newPos)
     {
-    }
-
-    public void ShowTriangle(int idx)
-    {
-    }
-
-    // Pulling only one vertex pt, results in broken mesh.
-    private void PullOneVertex(int index, Vector3 newPos)
-    {
-        vertices[index] = newPos; //1
-        clonedMesh.vertices = vertices; //2
-        clonedMesh.RecalculateNormals(); //3
-
-    }
-
-    private void PullSimilarVertices(int index, Vector3 newPos)
-    {
-
-
         Vector3 targetVertexPos = vertices[index]; //1
         List<int> relatedVertices = FindRelatedVertices(targetVertexPos, false); //2
-
-
-        //Debug.Log(targetVertexPos);
-
 
         foreach (int i in relatedVertices) //3
         {
             vertices[i] = newPos;
         }
-        clonedMesh.vertices = vertices; //4
-        clonedMesh.RecalculateNormals();
-        GetComponent<MeshCollider>().sharedMesh = null;
-        GetComponent<MeshCollider>().sharedMesh = clonedMesh;
     }
 
-    // To test Reset function
-    public void EditMesh()
+    public void PullConnectedVertices(int index, Vector3 newPos)
     {
-        vertices[2] = new Vector3(2, 3, 4);
-        vertices[3] = new Vector3(1, 2, 4);
-        clonedMesh.vertices = vertices;
-        clonedMesh.RecalculateNormals();
+        Vector3 targetVertexPos = vertices[index]; //1
+        List<int> relatedVertices = FindRelatedVertices(targetVertexPos, false); //2
+        List<int> connectedVertices = FindConnectedVertices(targetVertexPos, false);
+
+        for (int i = 0; i < relatedVertices.Count; i++)
+        {
+            connectedVertices.Remove(relatedVertices[i]);
+        }
+
+        foreach (int i in connectedVertices) //3
+        {
+            vertices[i] = new Vector3(vertices[i].x + 0.001f, vertices[i].y + 0.001f, vertices[i].z + 0.001f);
+        }
+
     }
+
+    public List<int> FindConnectedVertices(Vector3 targetPt, bool findConnected)
+    {
+        // list of int
+        List<int> connectedVertices = new List<int>();
+
+        // loop through triangle array of indices
+        for (int t = 0; t < triangles.Length; t += 3)
+        {
+            Vector3 p1 = vertices[triangles[t + 0]];
+            Vector3 p2 = vertices[triangles[t + 1]];
+            Vector3 p3 = vertices[triangles[t + 2]];
+
+            // if current pos is same as targetPt
+            if (targetPt == p1)
+            {
+                connectedVertices.Add(triangles[t + 1]);
+                connectedVertices.Add(triangles[t + 2]);
+            }
+            if (targetPt == p2)
+            {
+                connectedVertices.Add(triangles[t + 0]);
+                connectedVertices.Add(triangles[t + 2]);
+            }
+            if (targetPt == p3)
+            {
+                connectedVertices.Add(triangles[t + 0]);
+                connectedVertices.Add(triangles[t + 1]);
+            }
+        }
+        // return compiled list of int
+        return connectedVertices;
+    }
+
+
+
+
+
+
+
+
+
+
 }
+
+
+

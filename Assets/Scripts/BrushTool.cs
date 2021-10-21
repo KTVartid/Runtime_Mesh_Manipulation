@@ -48,6 +48,8 @@ public class BrushTool : MonoBehaviour
     public Vector3 mOld;
     public Vector3 mNow;
 
+    SelectTool selectTool;
+
     void Start()
     {
         mouseSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -64,6 +66,7 @@ public class BrushTool : MonoBehaviour
         camera = cam.GetComponent<Camera>();
         line = gameObject.GetComponent<LineRenderer>();
         line.loop = true;
+        selectTool = GameObject.Find("Main Camera").GetComponent<SelectTool>();
     }
 
 
@@ -268,4 +271,18 @@ public class BrushTool : MonoBehaviour
             }
         }
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
