@@ -219,6 +219,11 @@ MonoBehaviour:
   pull: 0.3
   handleSize: 0.03
   moveVertexPoint: 1
+  mZCoord: 0
+  mOld: {x: 0, y: 0, z: 0}
+  mNow: {x: 0, y: 0, z: 0}
+  EPrad: []
+  EPcon: []
 --- !u!64 &152711373
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -446,12 +451,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 3225e2ea6ebd2d94bb8c1010e4a6b4d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.09
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3225e2ea6ebd2d94bb8c1010e4a6b4d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.14
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3225e2ea6ebd2d94bb8c1010e4a6b4d2,
         type: 3}
@@ -662,6 +667,11 @@ MonoBehaviour:
   pull: 0.3
   handleSize: 0.03
   moveVertexPoint: 1
+  mZCoord: 0
+  mOld: {x: 0, y: 0, z: 0}
+  mNow: {x: 0, y: 0, z: 0}
+  EPrad: []
+  EPcon: []
 --- !u!64 &806827085
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1254,6 +1264,11 @@ MonoBehaviour:
   pull: 0.3
   handleSize: 0.03
   moveVertexPoint: 1
+  mZCoord: 0
+  mOld: {x: 0, y: 0, z: 0}
+  mNow: {x: 0, y: 0, z: 0}
+  EPrad: []
+  EPcon: []
 --- !u!64 &1447877647
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1349,6 +1364,11 @@ MonoBehaviour:
   pull: 0.3
   handleSize: 0.03
   moveVertexPoint: 1
+  mZCoord: 0
+  mOld: {x: 0, y: 0, z: 0}
+  mNow: {x: 0, y: 0, z: 0}
+  EPrad: []
+  EPcon: []
 --- !u!23 &1612374762
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1404,7 +1424,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1612374757}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.116, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1700,6 +1720,11 @@ MonoBehaviour:
   pull: 0.3
   handleSize: 0.03
   moveVertexPoint: 1
+  mZCoord: 0
+  mOld: {x: 0, y: 0, z: 0}
+  mNow: {x: 0, y: 0, z: 0}
+  EPrad: []
+  EPcon: []
 --- !u!64 &1771500783
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -44,7 +44,6 @@ public class BrushTool : MonoBehaviour
     private int Index;
 
     public float mZCoord;
-    public Vector3 mOffset;
     public Vector3 mOld;
     public Vector3 mNow;
 
@@ -170,8 +169,9 @@ public class BrushTool : MonoBehaviour
 
                 EPrad[i].transform.position += mDelta;
                 Index = EPrad[i].GetComponent<DragObject>().Index;
-                mesh.DoAction(Index, EPrad[i].transform.localPosition);
+                mesh.DoAction(Index, EPrad[i].transform.localPosition, false);
             }
+
         }
 
         if (Input.GetMouseButtonUp(0))

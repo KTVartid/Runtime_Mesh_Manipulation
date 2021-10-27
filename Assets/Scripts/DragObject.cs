@@ -13,6 +13,8 @@ public class DragObject : MonoBehaviour
     public int Index;
 
     private MeshFilter meshFilter;
+    public List<int> pairedVertices = new List<int>();
+
 
 
     public void Init(int Index, MeshStudy mesh)
@@ -43,7 +45,13 @@ public class DragObject : MonoBehaviour
     void OnMouseDrag()
     {
         transform.position = GetMouseWorldPos() + mOffset;
-        mesh.DoAction(Index, transform.localPosition);
+        for (int i = 0; i < pairedVertices.Count; i++)
+        {
+            mesh.vertices[pairedVertices[i]] = transform.localPosition;
+        }
+        mesh.ReDraw();
     }
+
+
 
 }

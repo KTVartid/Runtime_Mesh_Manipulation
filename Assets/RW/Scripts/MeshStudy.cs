@@ -37,8 +37,6 @@ using System.Linq;
 
 
 
-//[ExecuteInEditMode]
-
 public class MeshStudy : MonoBehaviour
 {
     Mesh originalMesh;
@@ -60,10 +58,37 @@ public class MeshStudy : MonoBehaviour
     public List<Vector3[]> allTriangleList;
     public bool moveVertexPoint = true;
 
+    private int Index;
+    public float mZCoord;
+    Vector3 mDelta;
+    public Vector3 mOld;
+    public Vector3 mNow;
+    public List<GameObject> EPrad = new List<GameObject>();
+    public List<GameObject> EPcon;
+    public HashSet<GameObject> EPconHash;
+    MeshRenderer rend;
+
+
     void Start()
     {
         InitMesh();
 
+        GameObject actualEP;
+        Vector3 actualEPpos;
+
+        for (int i = 0; i < EPrad.Count; i++)
+        {
+            actualEP = EPrad[i];
+            actualEPpos = actualEP.transform.localPosition;
+            for (int j = 0; j < vertices.Length; j++)
+            {
+                if (actualEPpos == vertices[j])
+                {
+                    List<int> vertIndex = EPrad[i].GetComponent<DragObject>().pairedVertices;
+                    vertIndex.Add(j);
+                }
+            }
+        }
 
     }
 
@@ -106,32 +131,35 @@ public class MeshStudy : MonoBehaviour
                 rend.material.color = Color.blue;
                 vert.AddComponent<DragObject>();
                 vert.GetComponent<DragObject>().Init(i, this);
+                EPrad.Add(vert);
             }
+
         }
 
-        Debug.Log("current vertices: " + dotCoords.Count);
-
+        //Debug.Log("current vertices: " + dotCoords.Count);
     }
 
 
-
-
-    //public void GetConnectedVertices()
-    //{
-    //    connectedVertices = new List<int>[vertices.Length];
-
-    //}
-
-    public void DoAction(int index, Vector3 localPos)
+    public void DoAction(int index, Vector3 localPos, bool isMulti)
     {
-        PullSimilarVertices(index, localPos);
-        PullConnectedVertices(index, localPos);
+        if (isMulti)
+        {
+            //PullConnectedVertices(index, localPos);
+        }
 
+        PullSimilarVertices(index, localPos);
+
+        ReDraw();
+    }
+
+    public void ReDraw()
+    {
         clonedMesh.vertices = vertices; //4
         clonedMesh.RecalculateNormals();
         GetComponent<MeshCollider>().sharedMesh = null;
         GetComponent<MeshCollider>().sharedMesh = clonedMesh;
     }
+
 
     // returns List of int that is related to the targetPt.
     public List<int> FindRelatedVertices(Vector3 targetPt, bool findConnected)
@@ -193,24 +221,12 @@ public class MeshStudy : MonoBehaviour
         {
             vertices[i] = newPos;
         }
+
     }
-
-    public void PullConnectedVertices(int index, Vector3 newPos)
+    void Update()
     {
-        Vector3 targetVertexPos = vertices[index]; //1
-        List<int> relatedVertices = FindRelatedVertices(targetVertexPos, false); //2
-        List<int> connectedVertices = FindConnectedVertices(targetVertexPos, false);
-
-        for (int i = 0; i < relatedVertices.Count; i++)
-        {
-            connectedVertices.Remove(relatedVertices[i]);
-        }
-
-        foreach (int i in connectedVertices) //3
-        {
-            vertices[i] = new Vector3(vertices[i].x + 0.001f, vertices[i].y + 0.001f, vertices[i].z + 0.001f);
-        }
-
+        mNow = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mOld = mNow;
     }
 
     public List<int> FindConnectedVertices(Vector3 targetPt, bool findConnected)
@@ -245,6 +261,54 @@ public class MeshStudy : MonoBehaviour
         // return compiled list of int
         return connectedVertices;
     }
+
+    //public void PullConnectedVertices(int index, Vector3 newPos)
+    //{
+    //    Vector3 targetVertexPos = vertices[index]; //1
+    //    List<int> relatedVertices = FindRelatedVertices(targetVertexPos, false); //2
+    //    List<int> connectedVertices = FindConnectedVertices(targetVertexPos, false);
+
+    //    for (int i = 0; i < relatedVertices.Count; i++)
+    //    {
+    //        connectedVertices.Remove(relatedVertices[i]);
+    //    }
+
+    //    //if (Input.GetMouseButton(0) && connectedVertices.Count != 0)
+    //    //{
+    //    //    mOld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //    //    Vector3 mDelta = mNow - mOld;
+
+    //    //    for (int i = 0; i < connectedVertices.Count; i++) //3
+    //    //    {
+    //    //        try
+    //    //        {
+    //    //            Index = connectedVertices[i];
+    //    //            vertices[Index] -= (mDelta / 10);
+    //    //            DoAction(Index, vertices[Index], false);
+    //    //            EPrad[Index].transform.localPosition = vertices[Index];
+
+    //    //        }
+    //    //        catch (Exception)
+    //    //        {
+    //    //            Debug.Log(" ");
+    //    //        }
+    //    //    }
+    //    //}
+    //    //EPcon.Clear();
+    //}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
