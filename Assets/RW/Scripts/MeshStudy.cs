@@ -42,7 +42,7 @@ public class MeshStudy : MonoBehaviour
     Mesh originalMesh;
     Mesh clonedMesh;
     MeshFilter meshFilter;
-    int[] triangles;
+    public int[] triangles;
 
     [HideInInspector]
     public Vector3[] vertices;
@@ -54,7 +54,6 @@ public class MeshStudy : MonoBehaviour
     public float radius = 0.2f;
     public float pull = 0.3f;
     public float handleSize = 0.03f;
-    //public List<int>[] connectedVertices;
     public List<Vector3[]> allTriangleList;
     public bool moveVertexPoint = true;
 
@@ -63,11 +62,11 @@ public class MeshStudy : MonoBehaviour
     Vector3 mDelta;
     public Vector3 mOld;
     public Vector3 mNow;
-    public List<GameObject> EPrad = new List<GameObject>();
+    public List<GameObject> EPList = new List<GameObject>();
     public List<GameObject> EPcon;
     public HashSet<GameObject> EPconHash;
     MeshRenderer rend;
-
+    List<int> connectedVertices = new List<int>();
 
     void Start()
     {
@@ -76,15 +75,15 @@ public class MeshStudy : MonoBehaviour
         GameObject actualEP;
         Vector3 actualEPpos;
 
-        for (int i = 0; i < EPrad.Count; i++)
+        for (int i = 0; i < EPList.Count; i++)
         {
-            actualEP = EPrad[i];
+            actualEP = EPList[i];
             actualEPpos = actualEP.transform.localPosition;
             for (int j = 0; j < vertices.Length; j++)
             {
                 if (actualEPpos == vertices[j])
                 {
-                    List<int> vertIndex = EPrad[i].GetComponent<DragObject>().pairedVertices;
+                    List<int> vertIndex = EPList[i].GetComponent<DragObject>().pairedVertices;
                     vertIndex.Add(j);
                 }
             }
@@ -131,12 +130,35 @@ public class MeshStudy : MonoBehaviour
                 rend.material.color = Color.blue;
                 vert.AddComponent<DragObject>();
                 vert.GetComponent<DragObject>().Init(i, this);
-                EPrad.Add(vert);
+                EPList.Add(vert);
             }
 
         }
 
-        //Debug.Log("current vertices: " + dotCoords.Count);
+        for (int i = 0; i < EPList.Count; i++)
+        {
+            for (int j = 0; j < vertices.Length; j++)
+            {
+                //connectedVertices.AddRange(FindConnectedVertices(vertices[j]));
+                //Debug.Log(connectedVertices[j]);
+                //for (int n = 0; n < connectedVertices.Count; n++)
+                //{
+                //Debug.Log(connectedVertices[n]);
+
+                //}
+
+
+
+
+
+
+
+
+                //connectedVertices.Clear();
+            }
+
+        }
+
     }
 
 
@@ -229,7 +251,7 @@ public class MeshStudy : MonoBehaviour
         mOld = mNow;
     }
 
-    public List<int> FindConnectedVertices(Vector3 targetPt, bool findConnected)
+    public List<int> FindConnectedVertices(Vector3 targetPt)
     {
         // list of int
         List<int> connectedVertices = new List<int>();
@@ -261,6 +283,8 @@ public class MeshStudy : MonoBehaviour
         // return compiled list of int
         return connectedVertices;
     }
+
+
 
     //public void PullConnectedVertices(int index, Vector3 newPos)
     //{
