@@ -57,16 +57,12 @@ public class MeshStudy : MonoBehaviour
     public List<Vector3[]> allTriangleList;
     public bool moveVertexPoint = true;
 
-    private int Index;
     public float mZCoord;
-    Vector3 mDelta;
     public Vector3 mOld;
     public Vector3 mNow;
     public List<GameObject> EPList = new List<GameObject>();
     public List<GameObject> EPcon;
     public HashSet<GameObject> EPconHash;
-    MeshRenderer rend;
-    List<int> connectedVertices = new List<int>();
 
     void Start()
     {
@@ -75,6 +71,8 @@ public class MeshStudy : MonoBehaviour
         GameObject actualEP;
         Vector3 actualEPpos;
 
+
+        // fill EPs with pairedVertices list
         for (int i = 0; i < EPList.Count; i++)
         {
             actualEP = EPList[i];
@@ -89,6 +87,31 @@ public class MeshStudy : MonoBehaviour
             }
         }
 
+        // fill connected EP list
+        for (int i = 0; i < EPList.Count; i++)
+        {
+            GameObject targetEP = EPList[i];
+            List<int> targetPairedVertices = targetEP.GetComponent<DragObject>().pairedVertices;
+
+            for (int j = 0; j < targetPairedVertices.Count; j++)
+            {
+                List<int> connectedVerts = FindConnectedVertices(vertices[targetPairedVertices[j]]);
+                for (int k = 0; k < connectedVerts.Count; k++)
+                {
+                    for (int l = 0; l < EPList.Count; l++)
+                    {
+                        for (int m = 0; m < EPList[l].GetComponent<DragObject>().pairedVertices.Count; m++)
+                        {
+                            if (connectedVerts[k] == EPList[l].GetComponent<DragObject>().pairedVertices[m] && !targetEP.GetComponent<DragObject>().connectedEP.Contains(EPList[l]))
+                            {
+                                targetEP.GetComponent<DragObject>().connectedEP.Add(EPList[l]);
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     HashSet<Vector3> dotCoords = new HashSet<Vector3>();
@@ -109,7 +132,6 @@ public class MeshStudy : MonoBehaviour
         vertices = clonedMesh.vertices; //4
         triangles = clonedMesh.triangles;
         isCloned = true; //5
-        //Debug.Log("Init & Cloned");
 
         Vector3 dotPos;
 
@@ -132,33 +154,7 @@ public class MeshStudy : MonoBehaviour
                 vert.GetComponent<DragObject>().Init(i, this);
                 EPList.Add(vert);
             }
-
         }
-
-        for (int i = 0; i < EPList.Count; i++)
-        {
-            for (int j = 0; j < vertices.Length; j++)
-            {
-                //connectedVertices.AddRange(FindConnectedVertices(vertices[j]));
-                //Debug.Log(connectedVertices[j]);
-                //for (int n = 0; n < connectedVertices.Count; n++)
-                //{
-                //Debug.Log(connectedVertices[n]);
-
-                //}
-
-
-
-
-
-
-
-
-                //connectedVertices.Clear();
-            }
-
-        }
-
     }
 
 
@@ -266,84 +262,39 @@ public class MeshStudy : MonoBehaviour
             // if current pos is same as targetPt
             if (targetPt == p1)
             {
-                connectedVertices.Add(triangles[t + 1]);
-                connectedVertices.Add(triangles[t + 2]);
+                if (!connectedVertices.Contains(triangles[t + 1]))
+                {
+                    connectedVertices.Add(triangles[t + 1]);
+                }
+                if (!connectedVertices.Contains(triangles[t + 2]))
+                {
+                    connectedVertices.Add(triangles[t + 2]);
+                }
             }
             if (targetPt == p2)
             {
-                connectedVertices.Add(triangles[t + 0]);
-                connectedVertices.Add(triangles[t + 2]);
+                if (!connectedVertices.Contains(triangles[t + 0]))
+                {
+                    connectedVertices.Add(triangles[t + 0]);
+                }
+                if (!connectedVertices.Contains(triangles[t + 2]))
+                {
+                    connectedVertices.Add(triangles[t + 2]);
+                }
             }
             if (targetPt == p3)
             {
-                connectedVertices.Add(triangles[t + 0]);
-                connectedVertices.Add(triangles[t + 1]);
+                if (!connectedVertices.Contains(triangles[t + 0]))
+                {
+                    connectedVertices.Add(triangles[t + 0]);
+                }
+                if (!connectedVertices.Contains(triangles[t + 1]))
+                {
+                    connectedVertices.Add(triangles[t + 1]);
+                }
             }
         }
         // return compiled list of int
         return connectedVertices;
     }
-
-
-
-    //public void PullConnectedVertices(int index, Vector3 newPos)
-    //{
-    //    Vector3 targetVertexPos = vertices[index]; //1
-    //    List<int> relatedVertices = FindRelatedVertices(targetVertexPos, false); //2
-    //    List<int> connectedVertices = FindConnectedVertices(targetVertexPos, false);
-
-    //    for (int i = 0; i < relatedVertices.Count; i++)
-    //    {
-    //        connectedVertices.Remove(relatedVertices[i]);
-    //    }
-
-    //    //if (Input.GetMouseButton(0) && connectedVertices.Count != 0)
-    //    //{
-    //    //    mOld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //    //    Vector3 mDelta = mNow - mOld;
-
-    //    //    for (int i = 0; i < connectedVertices.Count; i++) //3
-    //    //    {
-    //    //        try
-    //    //        {
-    //    //            Index = connectedVertices[i];
-    //    //            vertices[Index] -= (mDelta / 10);
-    //    //            DoAction(Index, vertices[Index], false);
-    //    //            EPrad[Index].transform.localPosition = vertices[Index];
-
-    //    //        }
-    //    //        catch (Exception)
-    //    //        {
-    //    //            Debug.Log(" ");
-    //    //        }
-    //    //    }
-    //    //}
-    //    //EPcon.Clear();
-    //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-

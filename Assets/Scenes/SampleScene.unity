@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a255b6d54c7b4f2ca07857faf4064d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triangles: 
   vertices: []
   isCloned: 0
   radius: 0.2
@@ -222,7 +223,7 @@ MonoBehaviour:
   mZCoord: 0
   mOld: {x: 0, y: 0, z: 0}
   mNow: {x: 0, y: 0, z: 0}
-  EPrad: []
+  EPList: []
   EPcon: []
 --- !u!64 &152711373
 MeshCollider:
@@ -661,6 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a255b6d54c7b4f2ca07857faf4064d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triangles: 
   vertices: []
   isCloned: 0
   radius: 0.2
@@ -670,7 +672,7 @@ MonoBehaviour:
   mZCoord: 0
   mOld: {x: 0, y: 0, z: 0}
   mNow: {x: 0, y: 0, z: 0}
-  EPrad: []
+  EPList: []
   EPcon: []
 --- !u!64 &806827085
 MeshCollider:
@@ -1258,6 +1260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a255b6d54c7b4f2ca07857faf4064d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triangles: 
   vertices: []
   isCloned: 0
   radius: 0.2
@@ -1267,7 +1270,7 @@ MonoBehaviour:
   mZCoord: 0
   mOld: {x: 0, y: 0, z: 0}
   mNow: {x: 0, y: 0, z: 0}
-  EPrad: []
+  EPList: []
   EPcon: []
 --- !u!64 &1447877647
 MeshCollider:
@@ -1358,6 +1361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a255b6d54c7b4f2ca07857faf4064d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triangles: 
   vertices: []
   isCloned: 0
   radius: 0.2
@@ -1367,7 +1371,7 @@ MonoBehaviour:
   mZCoord: 0
   mOld: {x: 0, y: 0, z: 0}
   mNow: {x: 0, y: 0, z: 0}
-  EPrad: []
+  EPList: []
   EPcon: []
 --- !u!23 &1612374762
 MeshRenderer:
@@ -1696,7 +1700,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1771500778}
   m_LocalRotation: {x: 0.12890759, y: 0.03653791, z: -0.2702413, w: 0.9534241}
-  m_LocalPosition: {x: 1.15, y: 0.68, z: 0.0000000069695147}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1714,6 +1718,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a255b6d54c7b4f2ca07857faf4064d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triangles: 
   vertices: []
   isCloned: 0
   radius: 0.2
@@ -1723,7 +1728,7 @@ MonoBehaviour:
   mZCoord: 0
   mOld: {x: 0, y: 0, z: 0}
   mNow: {x: 0, y: 0, z: 0}
-  EPrad: []
+  EPList: []
   EPcon: []
 --- !u!64 &1771500783
 MeshCollider:
