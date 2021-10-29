@@ -87,6 +87,8 @@ public class MeshStudy : MonoBehaviour
             }
         }
 
+        // ToDo: egyszerusiteni kell, mert sokaig tart betolteni
+
         // fill connected EP list
         for (int i = 0; i < EPList.Count; i++)
         {
@@ -106,7 +108,6 @@ public class MeshStudy : MonoBehaviour
                             {
                                 targetEP.GetComponent<DragObject>().connectedEP.Add(EPList[l]);
                             }
-
                         }
                     }
                 }

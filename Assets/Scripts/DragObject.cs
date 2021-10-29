@@ -37,15 +37,22 @@ public class DragObject : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            mOld = transform.position;
+            mOld = transform.localPosition;
         }
 
         if (Input.GetMouseButton(0))
         {
-            mNow = transform.position;
+            mNow = transform.localPosition;
             mDelta = mNow - mOld;
             mOld = mNow;
         }
+
+        for (int i = 0; i < pairedVertices.Count; i++)
+        {
+            mesh.vertices[pairedVertices[i]] = transform.localPosition;
+        }
+
+
     }
 
     private void OnMouseDown()
@@ -70,27 +77,17 @@ public class DragObject : MonoBehaviour
 
     void OnMouseDrag()
     {
-
-
         transform.position = GetMouseWorldPos() + mOffset;
         for (int i = 0; i < pairedVertices.Count; i++)
         {
             mesh.vertices[pairedVertices[i]] = transform.localPosition;
         }
 
-
-
-
-
-
         for (int i = 0; i < connectedEP.Count; i++)
         {
-            connectedEP[i].transform.localPosition -= (-mDelta / 10);
+            connectedEP[i].transform.localPosition += (mDelta / 10f);
         }
 
         mesh.ReDraw();
     }
-
-
-
 }
