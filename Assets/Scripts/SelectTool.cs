@@ -15,6 +15,7 @@ public class SelectTool : MonoBehaviour
 
     List<GameObject> objects;
     bool dragSlider;
+    bool dragSharpness;
 
     private void Start()
     {
@@ -26,10 +27,12 @@ public class SelectTool : MonoBehaviour
     void Update()
     {
         dragSlider = GameObject.Find("Slider").GetComponent<pointerEvent>().selected;
+        dragSharpness = GameObject.Find("Sharpness").GetComponent<pointerEvent>().selected;
 
+        // prevent deselect if click on slider
         if (Input.GetMouseButtonDown(0))
         {
-            if (dragSlider == true)
+            if (dragSlider || dragSharpness)
             {
             }
             else
@@ -42,7 +45,7 @@ public class SelectTool : MonoBehaviour
             //check if click hit anything
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit, clickablesLayer))
             {
-                if (rayHit.collider.name != "Wall")
+                if (rayHit.collider.gameObject.layer == 10)
                 {
                 rayHit.collider.GetComponent<ClickOn>().Activate();
                 }

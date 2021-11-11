@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class ClickOn : MonoBehaviour
 {
-    [SerializeField]
     private Material selected;
-    [SerializeField]
     private Material unselected;
 
     private MeshRenderer myRend;
@@ -24,6 +22,9 @@ public class ClickOn : MonoBehaviour
         transform.tag = "Active";
 
         foreach (Transform child in transform)
+            //if (child.gameObject.tag == "EP")
+            //{
             child.gameObject.SetActive(true);
+            //}
     }
 }

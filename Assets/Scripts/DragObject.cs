@@ -1,30 +1,30 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
 
 public class DragObject : MonoBehaviour
 {
-    public Vector3 mOffset;
-    public float mZCoord;
+    Vector3 mOffset;
+    float mZCoord;
     Vector3 mDelta;
-    public Vector3 mOld;
-    public Vector3 mNow;
+    Vector3 mOld;
+    Vector3 mNow;
 
-    public MeshStudy mesh;
+    MeshStudy mesh;
     public int Index;
 
     public List<int> pairedVertices = new List<int>();
     public List<GameObject> connectedEP = new List<GameObject>();
-    public List<GameObject> EPList = new List<GameObject>();
+    public List<HashSet<GameObject>> level;
 
-    public GameObject EPParent;
-    Vector3[] parentVertices;
+    public int sharpness;
 
-    private void Start()
+
+    void Start()
     {
-        parentVertices = mesh.vertices;
     }
 
     public void Init(int Index, MeshStudy mesh)
@@ -35,24 +35,21 @@ public class DragObject : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            mOld = transform.localPosition;
-        }
+        sharpness = (int)GameObject.Find("Sharpness").GetComponent<Slider>().value;
 
-        if (Input.GetMouseButton(0))
-        {
-            mNow = transform.localPosition;
-            mDelta = mNow - mOld;
-            mOld = mNow;
-        }
+        //mOld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        mNow = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mDelta = mNow - mOld;
+        mOld = mNow;
 
         for (int i = 0; i < pairedVertices.Count; i++)
         {
-            mesh.vertices[pairedVertices[i]] = transform.localPosition;
+            if (mesh.vertices[pairedVertices[i]] != transform.localPosition)
+            {
+                mesh.vertices[pairedVertices[i]] = transform.localPosition;
+            }
         }
-
-
     }
 
     private void OnMouseDown()
@@ -61,6 +58,26 @@ public class DragObject : MonoBehaviour
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         // Store offset = gameobject world pos - mouse world pos
         mOffset = gameObject.transform.position - GetMouseWorldPos();
+
+        level = new List<HashSet<GameObject>>();
+        HashSet<GameObject> draggedEP = new HashSet<GameObject>();
+        draggedEP.Add(this.gameObject);
+        level.Add(draggedEP);        // add first level manualy
+        for (int i = 1; i < sharpness; i++)
+        {
+            foreach (GameObject currentEP in level[i - 1])
+            {
+                HashSet<GameObject> actualConnectedEPList = new HashSet<GameObject>();
+                for (int j = 0; j < currentEP.GetComponent<DragObject>().connectedEP.Count; j++)
+                {
+                    if (!Check(currentEP.GetComponent<DragObject>().connectedEP[j], level))
+                    {
+                        actualConnectedEPList.Add(currentEP.GetComponent<DragObject>().connectedEP[j]);
+                    }
+                }
+                level.Add(actualConnectedEPList);
+            }
+        }
     }
 
     public Vector3 GetMouseWorldPos()
@@ -75,19 +92,31 @@ public class DragObject : MonoBehaviour
     }
 
 
+    bool Check(GameObject actualConnectedEP, List<HashSet<GameObject>> level)
+    {
+        for (int i = 0; i < level.Count; i++)
+        {
+            if (level[i].Contains(actualConnectedEP))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     void OnMouseDrag()
     {
-        transform.position = GetMouseWorldPos() + mOffset;
-        for (int i = 0; i < pairedVertices.Count; i++)
-        {
-            mesh.vertices[pairedVertices[i]] = transform.localPosition;
-        }
 
-        for (int i = 0; i < connectedEP.Count; i++)
+        for (int i = 0; i < level.Count; i++)
         {
-            connectedEP[i].transform.localPosition += (mDelta / 10f);
+            foreach (GameObject currentEP in level[i])
+            {
+                currentEP.transform.position += (mDelta / ((1 * i) + 1));
+            }
         }
 
         mesh.ReDraw();
     }
+
 }

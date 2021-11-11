@@ -273,16 +273,3 @@ public class BrushTool : MonoBehaviour
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

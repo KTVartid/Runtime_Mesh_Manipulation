@@ -49,7 +49,6 @@ public class ObjectViewer : MonoBehaviour
     Vector3 prevPos = new Vector3();
     GameObject brush;
 
-    BrushTool _BrushTool;
 
     void Start()
     {

@@ -1,33 +1,3 @@
-/*
- * Copyright (c) 2019 Razeware LLC
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * Notwithstanding the foregoing, you may not use, copy, modify, merge, publish, 
- * distribute, sublicense, create a derivative work, and/or sell copies of the 
- * Software in any work that is designed, intended, or marketed for pedagogical or 
- * instructional purposes related to programming, coding, application development, 
- * or information technology.  Permission for such use, copying, modification,
- * merger, publication, distribution, sublicensing, creation of derivative works, 
- * or sale is expressly withheld.
- *    
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
-*/
-
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
@@ -64,13 +34,19 @@ public class MeshStudy : MonoBehaviour
     public List<GameObject> EPcon;
     public HashSet<GameObject> EPconHash;
 
+    public RotationRing rings;
+
     void Start()
     {
         InitMesh();
+        //CreateAxles();
+
+        this.gameObject.AddComponent<RotationRing>();
 
         GameObject actualEP;
         Vector3 actualEPpos;
 
+        // ToDo: egyszerusiteni kell, mert sokaig tart betolteni **********************************
 
         // fill EPs with pairedVertices list
         for (int i = 0; i < EPList.Count; i++)
@@ -87,7 +63,6 @@ public class MeshStudy : MonoBehaviour
             }
         }
 
-        // ToDo: egyszerusiteni kell, mert sokaig tart betolteni
 
         // fill connected EP list
         for (int i = 0; i < EPList.Count; i++)
@@ -113,6 +88,11 @@ public class MeshStudy : MonoBehaviour
                 }
             }
         }
+
+        // ToDo: idáig **********************************
+
+
+
     }
 
     HashSet<Vector3> dotCoords = new HashSet<Vector3>();
@@ -136,6 +116,8 @@ public class MeshStudy : MonoBehaviour
 
         Vector3 dotPos;
 
+        // ezt is **********************************
+
         for (int i = 0; i < vertices.Length; i++)
         {
             dotPos = vertices[i];
@@ -156,6 +138,11 @@ public class MeshStudy : MonoBehaviour
                 EPList.Add(vert);
             }
         }
+
+        // idáig **********************************
+
+
+
     }
 
 
@@ -298,4 +285,41 @@ public class MeshStudy : MonoBehaviour
         // return compiled list of int
         return connectedVertices;
     }
+
+    //void CreateAxles()
+    //{
+    //    GameObject X = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+    //    X.transform.name = "X";
+    //    X.transform.tag = "X";
+    //    X.transform.parent = gameObject.transform;
+    //    X.transform.localPosition = new Vector3(0.9f, 0f, 0f);
+    //    X.transform.localScale = new Vector3(0.02f, 0.2f, 0.02f);
+    //    X.transform.localRotation = Quaternion.Euler(90, 90, 0);
+    //    X.GetComponent<CapsuleCollider>().direction = 0;
+    //    X.GetComponent<Renderer>().material.color = Color.red;
+    //    X.AddComponent<DragParent>();
+
+    //    GameObject Y = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+    //    Y.transform.name = "Y";
+    //    Y.transform.tag = "Y";
+    //    Y.transform.parent = gameObject.transform;
+    //    Y.transform.localPosition = new Vector3(0f, 1.4f, 0f);
+    //    Y.transform.localScale = new Vector3(0.02f, 0.2f, 0.02f);
+    //    Y.transform.localRotation = Quaternion.Euler(0, 0, 0);
+    //    Y.GetComponent<CapsuleCollider>().direction = 1;
+    //    Y.GetComponent<Renderer>().material.color = Color.green;
+    //    Y.AddComponent<DragParent>();
+
+    //    GameObject Z = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+    //    Z.transform.name = "Z";
+    //    Z.transform.tag = "Z";
+    //    Z.transform.parent = gameObject.transform;
+    //    Z.transform.localPosition = new Vector3(0f, 0f, 0.9f);
+    //    Z.transform.localScale = new Vector3(0.02f, 0.2f, 0.02f);
+    //    Z.transform.localRotation = Quaternion.Euler(90, 0, 0);
+    //    Z.GetComponent<CapsuleCollider>().direction = 2;
+    //    Z.GetComponent<Renderer>().material.color = Color.blue;
+    //    Z.AddComponent<DragParent>();
+    //}
+
 }
