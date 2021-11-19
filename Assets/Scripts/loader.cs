@@ -33,7 +33,7 @@ public class loader : MonoBehaviour
         filter.mesh = holderMesh;
         go.AddComponent<MeshCollider>();
         go.AddComponent<MeshStudy>();
-        go.AddComponent<ClickOn>();
+        go.AddComponent<Activator>();
         renderer.material = mat;
         //renderer.material = originalMat;
 

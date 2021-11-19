@@ -34,17 +34,18 @@ public class MeshStudy : MonoBehaviour
     public List<GameObject> EPcon;
     public HashSet<GameObject> EPconHash;
 
-    public RotationRing rings;
+
+
 
     void Start()
     {
         InitMesh();
-        //CreateAxles();
 
-        this.gameObject.AddComponent<RotationRing>();
 
         GameObject actualEP;
         Vector3 actualEPpos;
+
+
 
         // ToDo: egyszerusiteni kell, mert sokaig tart betolteni **********************************
 
@@ -109,6 +110,9 @@ public class MeshStudy : MonoBehaviour
         clonedMesh.normals = originalMesh.normals;
         clonedMesh.uv = originalMesh.uv;
         meshFilter.mesh = clonedMesh;  //3
+        gameObject.AddComponent<isSelected>();
+        gameObject.AddComponent<Activator>();
+
 
         vertices = clonedMesh.vertices; //4
         triangles = clonedMesh.triangles;
@@ -136,6 +140,7 @@ public class MeshStudy : MonoBehaviour
                 vert.AddComponent<DragObject>();
                 vert.GetComponent<DragObject>().Init(i, this);
                 EPList.Add(vert);
+                vert.SetActive(false);
             }
         }
 
@@ -286,40 +291,19 @@ public class MeshStudy : MonoBehaviour
         return connectedVertices;
     }
 
-    //void CreateAxles()
-    //{
-    //    GameObject X = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-    //    X.transform.name = "X";
-    //    X.transform.tag = "X";
-    //    X.transform.parent = gameObject.transform;
-    //    X.transform.localPosition = new Vector3(0.9f, 0f, 0f);
-    //    X.transform.localScale = new Vector3(0.02f, 0.2f, 0.02f);
-    //    X.transform.localRotation = Quaternion.Euler(90, 90, 0);
-    //    X.GetComponent<CapsuleCollider>().direction = 0;
-    //    X.GetComponent<Renderer>().material.color = Color.red;
-    //    X.AddComponent<DragParent>();
+    public void turnOnEP()
+    {
+        for (int i = 0; i < EPList.Count; i++)
+        {
+            EPList[i].SetActive(true);
+        }
+    }
 
-    //    GameObject Y = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-    //    Y.transform.name = "Y";
-    //    Y.transform.tag = "Y";
-    //    Y.transform.parent = gameObject.transform;
-    //    Y.transform.localPosition = new Vector3(0f, 1.4f, 0f);
-    //    Y.transform.localScale = new Vector3(0.02f, 0.2f, 0.02f);
-    //    Y.transform.localRotation = Quaternion.Euler(0, 0, 0);
-    //    Y.GetComponent<CapsuleCollider>().direction = 1;
-    //    Y.GetComponent<Renderer>().material.color = Color.green;
-    //    Y.AddComponent<DragParent>();
-
-    //    GameObject Z = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-    //    Z.transform.name = "Z";
-    //    Z.transform.tag = "Z";
-    //    Z.transform.parent = gameObject.transform;
-    //    Z.transform.localPosition = new Vector3(0f, 0f, 0.9f);
-    //    Z.transform.localScale = new Vector3(0.02f, 0.2f, 0.02f);
-    //    Z.transform.localRotation = Quaternion.Euler(90, 0, 0);
-    //    Z.GetComponent<CapsuleCollider>().direction = 2;
-    //    Z.GetComponent<Renderer>().material.color = Color.blue;
-    //    Z.AddComponent<DragParent>();
-    //}
-
+    public void turnOffEP()
+    {
+        for (int i = 0; i < EPList.Count; i++)
+        {
+            EPList[i].SetActive(false);
+        }
+    }
 }

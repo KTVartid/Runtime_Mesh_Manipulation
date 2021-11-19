@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using System;
 
 public class SelectTool : MonoBehaviour
 {
@@ -14,66 +14,100 @@ public class SelectTool : MonoBehaviour
     private Material unselected;
 
     List<GameObject> objects;
-    bool dragSlider;
-    bool dragSharpness;
+    List<GameObject> buttons;
+
+    GameObject wall;
+
+    public GameObject activeIO;
+    public GameObject old;
+
+    public bool UIClicked;
+    public GameObject activeButton;
+    public GameObject oldButton;
+
+    Collider activeCollider;
+    Vector3 activeSize;
+    public Vector3 unifiedSize;
+
 
     private void Start()
     {
+        wall = GameObject.Find("Wall");
         objects = new List<GameObject>();
-        Deactivate();
     }
 
 
     void Update()
     {
-        dragSlider = GameObject.Find("Slider").GetComponent<pointerEvent>().selected;
-        dragSharpness = GameObject.Find("Sharpness").GetComponent<pointerEvent>().selected;
-
-        // prevent deselect if click on slider
         if (Input.GetMouseButtonDown(0))
         {
-            if (dragSlider || dragSharpness)
-            {
-            }
-            else
-            {
-                Deactivate();
-            }
+            checkClick();
+            activateButton();
+        }
+    }
 
-            RaycastHit rayHit;
-
-            //check if click hit anything
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit, clickablesLayer))
+    void checkClick()
+    {
+        if (activeIO != null)
+        {
+            if (activeIO.name != "Wall")
             {
-                if (rayHit.collider.gameObject.layer == 10)
+                activeIO.GetComponent<Activator>().Activate();
+                if (old != null)
                 {
-                rayHit.collider.GetComponent<ClickOn>().Activate();
+                    old.GetComponent<Activator>().deActivate();
+                    old = activeIO;
                 }
+                else
+                {
+                    old = activeIO;
+                }
+            }
+            else if (activeIO.name == "Wall" && old != null && UIClicked != true)
+            {
+                old.GetComponent<Activator>().deActivate();
+                old = null;
             }
         }
         objects.Clear();
     }
 
-    public void Deactivate()
+    void activateButton()
     {
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Active"))
+        if (activeButton != null && activeIO != null)
         {
-            obj.transform.tag = "IO";
+            activeButton.GetComponent<buttonScript>().Activate();
+            if (oldButton != null)
+            {
+                oldButton.GetComponent<buttonScript>().Deactivate();
+                if (oldButton == activeButton)
+                {
+                    oldButton = null;
+                }
+                else
+                {
+                    oldButton = activeButton;
+                }
+            }
+            else if(activeButton != null)
+            {
+                oldButton = activeButton;
+            }
         }
+    }
 
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("IO"))
-        {
-            objects.Add(obj);
-        }
+    public void fetchTargetSize()
+    {
+        activeCollider = old.transform.GetComponent<Collider>();
+        activeSize = activeCollider.bounds.size;
 
-        for (int i = 0; i < objects.Count; i++)
-        {
-            objects[i].GetComponent<MeshRenderer>().material = unselected;
-        }
+        float maxSize = Math.Max(Math.Max(activeSize.x, activeSize.y), activeSize.z);
+        float averageSize = (activeSize.x + activeSize.y + activeSize.z) / 3f;
+        unifiedSize = new Vector3(maxSize, maxSize, maxSize);
+    }
 
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("EP"))
-        {
-            obj.SetActive(false);
-        }
+    private void OnMouseUp()
+    {
+        fetchTargetSize();
     }
 }

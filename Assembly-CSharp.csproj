@@ -64,7 +64,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\QuickOutline\Scripts\Outline.cs" />
     <Compile Include="Assets\RW\Scripts\MeshStudy.cs" />
     <Compile Include="Assets\RW\Scripts\ObjectViewer.cs" />
     <Compile Include="Assets\RuntimeGizmo\Custom\TransformGizmoCustomGizmo.cs" />
@@ -87,28 +86,34 @@
     <Compile Include="Assets\RuntimeGizmo\UndoRedo\ICommand.cs" />
     <Compile Include="Assets\RuntimeGizmo\UndoRedo\UndoRedo.cs" />
     <Compile Include="Assets\RuntimeGizmo\UndoRedo\UndoRedoManager.cs" />
+    <Compile Include="Assets\Scripts\Activator.cs" />
     <Compile Include="Assets\Scripts\BrushTool.cs" />
-    <Compile Include="Assets\Scripts\ClickOn.cs" />
-    <Compile Include="Assets\Scripts\CreatingGizmos.cs" />
+    <Compile Include="Assets\Scripts\CreateTransformationGizmos.cs" />
     <Compile Include="Assets\Scripts\DragObject.cs" />
-    <Compile Include="Assets\Scripts\DragParent.cs" />
     <Compile Include="Assets\Scripts\ExtensionMethods.cs" />
+    <Compile Include="Assets\Scripts\MoveActive.cs" />
     <Compile Include="Assets\Scripts\ObjImporter.cs" />
-    <Compile Include="Assets\Scripts\RotateParent.cs" />
-    <Compile Include="Assets\Scripts\RotationRing.cs" />
+    <Compile Include="Assets\Scripts\RotateActive.cs" />
     <Compile Include="Assets\Scripts\SelectTool.cs" />
+    <Compile Include="Assets\Scripts\UIIsSelected.cs" />
     <Compile Include="Assets\Scripts\Wall.cs" />
+    <Compile Include="Assets\Scripts\buttonScript.cs" />
     <Compile Include="Assets\Scripts\changeColor.cs" />
+    <Compile Include="Assets\Scripts\cut_ver1\ExampleUseof_MeshCut.cs" />
+    <Compile Include="Assets\Scripts\cut_ver1\MeshCut.cs" />
+    <Compile Include="Assets\Scripts\cut_ver1\Mesh_Maker.cs" />
+    <Compile Include="Assets\Scripts\cut_ver2\Capsule.cs" />
+    <Compile Include="Assets\Scripts\cut_ver2\Lighsaber.cs" />
+    <Compile Include="Assets\Scripts\cut_ver2\Sliceable.cs" />
+    <Compile Include="Assets\Scripts\cut_ver2\Slicer.cs" />
+    <Compile Include="Assets\Scripts\cut_ver2\SlicesMetadata.cs" />
+    <Compile Include="Assets\Scripts\isSelected.cs" />
     <Compile Include="Assets\Scripts\loader.cs" />
-    <Compile Include="Assets\Scripts\pointerEvent.cs" />
     <None Include="Assets\RuntimeGizmo\Shader\Resources\Lines.shader" />
-    <None Include="Assets\QuickOutline\Resources\Shaders\OutlineMask.shader" />
     <None Include="Assets\RuntimeGizmo\Shader\Resources\Outline.shader" />
-    <None Include="Assets\QuickOutline\Readme.txt" />
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Wireframe Functions.cginc" />
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Cutout Wireframe.shader" />
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Double-Sided Wireframe.shader" />
-    <None Include="Assets\QuickOutline\Resources\Shaders\OutlineFill.shader" />
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Double-Sided Cutout Wireframe.shader" />
     <None Include="Assets\UCLAGameLab\Wireframe\Shaders\UCLA GameLab Wireframe.shader" />
     <Reference Include="UnityEngine">
