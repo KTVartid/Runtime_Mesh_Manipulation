@@ -22,9 +22,14 @@ public class DragObject : MonoBehaviour
 
     public int sharpness;
 
+    public List<DragObject> siblings = new List<DragObject>();
+    public List<int> points = new List<int>();
+    public List<int> triangles = new List<int>();
+
 
     void Start()
     {
+        
     }
 
     public void Init(int Index, MeshStudy mesh)

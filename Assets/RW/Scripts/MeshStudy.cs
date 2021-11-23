@@ -34,11 +34,17 @@ public class MeshStudy : MonoBehaviour
     public List<GameObject> EPcon;
     public HashSet<GameObject> EPconHash;
 
+    Dictionary<Vector3, DragObject> points = new Dictionary<Vector3, DragObject>();
+    List<DragObject> DragObjects = new List<DragObject>();
+
+    int count = 0;
+
 
 
 
     void Start()
     {
+
         InitMesh();
 
 
@@ -50,45 +56,45 @@ public class MeshStudy : MonoBehaviour
         // ToDo: egyszerusiteni kell, mert sokaig tart betolteni **********************************
 
         // fill EPs with pairedVertices list
-        for (int i = 0; i < EPList.Count; i++)
-        {
-            actualEP = EPList[i];
-            actualEPpos = actualEP.transform.localPosition;
-            for (int j = 0; j < vertices.Length; j++)
-            {
-                if (actualEPpos == vertices[j])
-                {
-                    List<int> vertIndex = EPList[i].GetComponent<DragObject>().pairedVertices;
-                    vertIndex.Add(j);
-                }
-            }
-        }
+        ////for (int i = 0; i < EPList.Count; i++)
+        ////{
+        ////    actualEP = EPList[i];
+        ////    actualEPpos = actualEP.transform.localPosition;
+        ////    for (int j = 0; j < vertices.Length; j++)
+        ////    {
+        ////        if (actualEPpos == vertices[j])
+        ////        {
+        ////            List<int> vertIndex = EPList[i].GetComponent<DragObject>().pairedVertices;
+        ////            vertIndex.Add(j);
+        ////        }
+        ////    }
+        ////}
 
 
-        // fill connected EP list
-        for (int i = 0; i < EPList.Count; i++)
-        {
-            GameObject targetEP = EPList[i];
-            List<int> targetPairedVertices = targetEP.GetComponent<DragObject>().pairedVertices;
+        ////// fill connected EP list
+        ////for (int i = 0; i < EPList.Count; i++)
+        ////{
+        ////    GameObject targetEP = EPList[i];
+        ////    List<int> targetPairedVertices = targetEP.GetComponent<DragObject>().pairedVertices;
 
-            for (int j = 0; j < targetPairedVertices.Count; j++)
-            {
-                List<int> connectedVerts = FindConnectedVertices(vertices[targetPairedVertices[j]]);
-                for (int k = 0; k < connectedVerts.Count; k++)
-                {
-                    for (int l = 0; l < EPList.Count; l++)
-                    {
-                        for (int m = 0; m < EPList[l].GetComponent<DragObject>().pairedVertices.Count; m++)
-                        {
-                            if (connectedVerts[k] == EPList[l].GetComponent<DragObject>().pairedVertices[m] && !targetEP.GetComponent<DragObject>().connectedEP.Contains(EPList[l]))
-                            {
-                                targetEP.GetComponent<DragObject>().connectedEP.Add(EPList[l]);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        ////    for (int j = 0; j < targetPairedVertices.Count; j++)
+        ////    {
+        ////        List<int> connectedVerts = FindConnectedVertices(vertices[targetPairedVertices[j]]);
+        ////        for (int k = 0; k < connectedVerts.Count; k++)
+        ////        {
+        ////            for (int l = 0; l < EPList.Count; l++)
+        ////            {
+        ////                for (int m = 0; m < EPList[l].GetComponent<DragObject>().pairedVertices.Count; m++)
+        ////                {
+        ////                    if (connectedVerts[k] == EPList[l].GetComponent<DragObject>().pairedVertices[m] && !targetEP.GetComponent<DragObject>().connectedEP.Contains(EPList[l]))
+        ////                    {
+        ////                        targetEP.GetComponent<DragObject>().connectedEP.Add(EPList[l]);
+        ////                    }
+        ////                }
+        ////            }
+        ////        }
+        ////    }
+        ////}
 
         // ToDo: idáig **********************************
 
@@ -120,35 +126,144 @@ public class MeshStudy : MonoBehaviour
 
         Vector3 dotPos;
 
-        // ezt is **********************************
 
-        for (int i = 0; i < vertices.Length; i++)
+
+        for (int i = 0; i < triangles.Length; i += 3) // végig megyünk az összes háromszögön
         {
-            dotPos = vertices[i];
-            if (dotCoords.Add(dotPos))
+            for (int j = 0; j < 3; j++) // végig megyünk a 3 szög adott pontján
             {
-                GameObject vert = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                Material vertMat = Resources.Load("vert_Mat", typeof(Material)) as Material;
-                Renderer rend = vert.GetComponent<MeshRenderer>();
-                vert.transform.name = "v" + (0 + i);
-                vert.transform.tag = "EP";
-                vert.layer = 9;
-                vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-                vert.transform.parent = gameObject.transform;
-                vert.transform.localPosition = vertices[i];
-                rend.material.color = Color.blue;
-                vert.AddComponent<DragObject>();
-                vert.GetComponent<DragObject>().Init(i, this);
-                EPList.Add(vert);
-                vert.SetActive(false);
+                Vector3 currentPoint = vertices[triangles[i] + j];
+                DragObject drg;
+                if (points.ContainsKey(currentPoint)) //Ha az adott pont már létezik akkor csak kiválasztjuk
+                {
+                    drg = points[currentPoint];
+                }
+                else // ha nem létezik akkor létrehozzuk hozzá adjuk az összes listájához a points dict hez és kiválasztjuk
+                {
+                    GameObject vert = createEP(triangles[i] + j);
+                    drg = vert.GetComponent<DragObject>();
+                    points[currentPoint] = drg;
+
+                    DragObjects.Add(drg);
+                }
+                drg.points.Add(triangles[i] + j); // a kiválasztott elemhez hozzá adjuk azt a pontot amiért felel
+                drg.triangles.Add(i); // a kiválasztott elemhez hozzá adjuk azt a háromszöget amiben szerepel
             }
         }
+
+        for (int i = 0; i < DragObjects.Count; i++) // végig megyünk az összes ponton
+        {
+            for (int j = i + 1; j < DragObjects.Count; j++) // végig megyünk az összes ponton az adott pont tól
+            {
+                if (isCommonTriangle(DragObjects[i], DragObjects[j])) // ha van 1 olyan háromszög amiben mind 2 en szerepelnek akkor ök testvérek
+                {
+                    DragObjects[i].siblings.Add(DragObjects[j]); // hozzá adjuk a testvért
+                    DragObjects[j].siblings.Add(DragObjects[i]); // szint ugy csak forditva
+                }
+                else
+                {
+                    Debug.Log("nope");
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // ezt is **********************************
+
+        ////for (int i = 0; i < vertices.Length; i++)
+        ////{
+        ////    dotPos = vertices[i];
+        ////    if (dotCoords.Add(dotPos))
+        ////    {
+        ////        GameObject vert = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        ////        Material vertMat = Resources.Load("vert_Mat", typeof(Material)) as Material;
+        ////        Renderer rend = vert.GetComponent<MeshRenderer>();
+        ////        vert.transform.name = "v" + (0 + i);
+        ////        vert.transform.tag = "EP";
+        ////        vert.layer = 9;
+        ////        vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+        ////        vert.transform.parent = gameObject.transform;
+        ////        vert.transform.localPosition = vertices[i];
+        ////        rend.material.color = Color.blue;
+        ////        vert.AddComponent<DragObject>();
+        ////        vert.GetComponent<DragObject>().Init(i, this);
+        ////        EPList.Add(vert);
+        ////        vert.SetActive(false);
+        ////    }
+        ////}
 
         // idáig **********************************
 
 
 
     }
+
+
+    bool isCommonTriangle(DragObject a, DragObject b) // kiválasztja hogy van e közös háromszögük
+    {
+        for (int i = 0; i < a.triangles.Count; i++)
+        {
+            for (int j = 0; j < b.triangles.Count; j++)
+            {
+                if (a.triangles[i] == b.triangles[j])
+                {
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
+
+
+    GameObject createEP(int point)
+    {
+        GameObject vert = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        Material vertMat = Resources.Load("vert_Mat", typeof(Material)) as Material;
+        Renderer rend = vert.GetComponent<MeshRenderer>();
+        vert.transform.name = "v" + (count);
+        count++;
+        vert.transform.tag = "EP";
+        vert.layer = 9;
+        vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+        vert.transform.parent = gameObject.transform;
+        vert.transform.localPosition = vertices[point];
+        rend.material.color = Color.blue;
+        vert.AddComponent<DragObject>();
+        vert.GetComponent<DragObject>().Init(point, this);
+        EPList.Add(vert);
+        //vert.SetActive(false);
+        return vert;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     public void DoAction(int index, Vector3 localPos, bool isMulti)
