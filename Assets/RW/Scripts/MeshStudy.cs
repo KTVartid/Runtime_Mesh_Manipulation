@@ -44,65 +44,11 @@ public class MeshStudy : MonoBehaviour
 
     void Start()
     {
-
         InitMesh();
-
 
         GameObject actualEP;
         Vector3 actualEPpos;
-
-
-
-        // ToDo: egyszerusiteni kell, mert sokaig tart betolteni **********************************
-
-        // fill EPs with pairedVertices list
-        ////for (int i = 0; i < EPList.Count; i++)
-        ////{
-        ////    actualEP = EPList[i];
-        ////    actualEPpos = actualEP.transform.localPosition;
-        ////    for (int j = 0; j < vertices.Length; j++)
-        ////    {
-        ////        if (actualEPpos == vertices[j])
-        ////        {
-        ////            List<int> vertIndex = EPList[i].GetComponent<DragObject>().pairedVertices;
-        ////            vertIndex.Add(j);
-        ////        }
-        ////    }
-        ////}
-
-
-        ////// fill connected EP list
-        ////for (int i = 0; i < EPList.Count; i++)
-        ////{
-        ////    GameObject targetEP = EPList[i];
-        ////    List<int> targetPairedVertices = targetEP.GetComponent<DragObject>().pairedVertices;
-
-        ////    for (int j = 0; j < targetPairedVertices.Count; j++)
-        ////    {
-        ////        List<int> connectedVerts = FindConnectedVertices(vertices[targetPairedVertices[j]]);
-        ////        for (int k = 0; k < connectedVerts.Count; k++)
-        ////        {
-        ////            for (int l = 0; l < EPList.Count; l++)
-        ////            {
-        ////                for (int m = 0; m < EPList[l].GetComponent<DragObject>().pairedVertices.Count; m++)
-        ////                {
-        ////                    if (connectedVerts[k] == EPList[l].GetComponent<DragObject>().pairedVertices[m] && !targetEP.GetComponent<DragObject>().connectedEP.Contains(EPList[l]))
-        ////                    {
-        ////                        targetEP.GetComponent<DragObject>().connectedEP.Add(EPList[l]);
-        ////                    }
-        ////                }
-        ////            }
-        ////        }
-        ////    }
-        ////}
-
-        // ToDo: idáig **********************************
-
-
-
     }
-
-    HashSet<Vector3> dotCoords = new HashSet<Vector3>();
 
     public void InitMesh()
     {
@@ -127,12 +73,11 @@ public class MeshStudy : MonoBehaviour
         Vector3 dotPos;
 
 
-
         for (int i = 0; i < triangles.Length; i += 3) // végig megyünk az összes háromszögön
         {
             for (int j = 0; j < 3; j++) // végig megyünk a 3 szög adott pontján
             {
-                Vector3 currentPoint = vertices[triangles[i] + j];
+                Vector3 currentPoint = vertices[triangles[i + j]];
                 DragObject drg;
                 if (points.ContainsKey(currentPoint)) //Ha az adott pont már létezik akkor csak kiválasztjuk
                 {
@@ -140,13 +85,13 @@ public class MeshStudy : MonoBehaviour
                 }
                 else // ha nem létezik akkor létrehozzuk hozzá adjuk az összes listájához a points dict hez és kiválasztjuk
                 {
-                    GameObject vert = createEP(triangles[i] + j);
+                    GameObject vert = createEP(triangles[i + j]);
                     drg = vert.GetComponent<DragObject>();
                     points[currentPoint] = drg;
 
                     DragObjects.Add(drg);
                 }
-                drg.points.Add(triangles[i] + j); // a kiválasztott elemhez hozzá adjuk azt a pontot amiért felel
+                drg.pairedVertices.Add(triangles[i + j]); // a kiválasztott elemhez hozzá adjuk azt a pontot amiért felel
                 drg.triangles.Add(i); // a kiválasztott elemhez hozzá adjuk azt a háromszöget amiben szerepel
             }
         }
@@ -157,65 +102,12 @@ public class MeshStudy : MonoBehaviour
             {
                 if (isCommonTriangle(DragObjects[i], DragObjects[j])) // ha van 1 olyan háromszög amiben mind 2 en szerepelnek akkor ök testvérek
                 {
-                    DragObjects[i].siblings.Add(DragObjects[j]); // hozzá adjuk a testvért
-                    DragObjects[j].siblings.Add(DragObjects[i]); // szint ugy csak forditva
-                }
-                else
-                {
-                    Debug.Log("nope");
+                    DragObjects[i].connectedEP.Add(DragObjects[j].gameObject); // hozzá adjuk a testvért
+                    DragObjects[j].connectedEP.Add(DragObjects[i].gameObject); // szint ugy csak forditva
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // ezt is **********************************
-
-        ////for (int i = 0; i < vertices.Length; i++)
-        ////{
-        ////    dotPos = vertices[i];
-        ////    if (dotCoords.Add(dotPos))
-        ////    {
-        ////        GameObject vert = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        ////        Material vertMat = Resources.Load("vert_Mat", typeof(Material)) as Material;
-        ////        Renderer rend = vert.GetComponent<MeshRenderer>();
-        ////        vert.transform.name = "v" + (0 + i);
-        ////        vert.transform.tag = "EP";
-        ////        vert.layer = 9;
-        ////        vert.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-        ////        vert.transform.parent = gameObject.transform;
-        ////        vert.transform.localPosition = vertices[i];
-        ////        rend.material.color = Color.blue;
-        ////        vert.AddComponent<DragObject>();
-        ////        vert.GetComponent<DragObject>().Init(i, this);
-        ////        EPList.Add(vert);
-        ////        vert.SetActive(false);
-        ////    }
-        ////}
-
-        // idáig **********************************
-
-
-
     }
-
 
     bool isCommonTriangle(DragObject a, DragObject b) // kiválasztja hogy van e közös háromszögük
     {
@@ -233,7 +125,6 @@ public class MeshStudy : MonoBehaviour
         return false;
     }
 
-
     GameObject createEP(int point)
     {
         GameObject vert = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -250,21 +141,9 @@ public class MeshStudy : MonoBehaviour
         vert.AddComponent<DragObject>();
         vert.GetComponent<DragObject>().Init(point, this);
         EPList.Add(vert);
-        //vert.SetActive(false);
+        vert.SetActive(false);
         return vert;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void DoAction(int index, Vector3 localPos, bool isMulti)
     {
@@ -285,7 +164,6 @@ public class MeshStudy : MonoBehaviour
         GetComponent<MeshCollider>().sharedMesh = null;
         GetComponent<MeshCollider>().sharedMesh = clonedMesh;
     }
-
 
     // returns List of int that is related to the targetPt.
     public List<int> FindRelatedVertices(Vector3 targetPt, bool findConnected)
@@ -353,57 +231,6 @@ public class MeshStudy : MonoBehaviour
     {
         mNow = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mOld = mNow;
-    }
-
-    public List<int> FindConnectedVertices(Vector3 targetPt)
-    {
-        // list of int
-        List<int> connectedVertices = new List<int>();
-
-        // loop through triangle array of indices
-        for (int t = 0; t < triangles.Length; t += 3)
-        {
-            Vector3 p1 = vertices[triangles[t + 0]];
-            Vector3 p2 = vertices[triangles[t + 1]];
-            Vector3 p3 = vertices[triangles[t + 2]];
-
-            // if current pos is same as targetPt
-            if (targetPt == p1)
-            {
-                if (!connectedVertices.Contains(triangles[t + 1]))
-                {
-                    connectedVertices.Add(triangles[t + 1]);
-                }
-                if (!connectedVertices.Contains(triangles[t + 2]))
-                {
-                    connectedVertices.Add(triangles[t + 2]);
-                }
-            }
-            if (targetPt == p2)
-            {
-                if (!connectedVertices.Contains(triangles[t + 0]))
-                {
-                    connectedVertices.Add(triangles[t + 0]);
-                }
-                if (!connectedVertices.Contains(triangles[t + 2]))
-                {
-                    connectedVertices.Add(triangles[t + 2]);
-                }
-            }
-            if (targetPt == p3)
-            {
-                if (!connectedVertices.Contains(triangles[t + 0]))
-                {
-                    connectedVertices.Add(triangles[t + 0]);
-                }
-                if (!connectedVertices.Contains(triangles[t + 1]))
-                {
-                    connectedVertices.Add(triangles[t + 1]);
-                }
-            }
-        }
-        // return compiled list of int
-        return connectedVertices;
     }
 
     public void turnOnEP()

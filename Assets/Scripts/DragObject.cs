@@ -17,20 +17,12 @@ public class DragObject : MonoBehaviour
     public int Index;
 
     public List<int> pairedVertices = new List<int>();
+    public List<int> triangles = new List<int>();
     public List<GameObject> connectedEP = new List<GameObject>();
     public List<HashSet<GameObject>> level;
 
     public int sharpness;
 
-    public List<DragObject> siblings = new List<DragObject>();
-    public List<int> points = new List<int>();
-    public List<int> triangles = new List<int>();
-
-
-    void Start()
-    {
-        
-    }
 
     public void Init(int Index, MeshStudy mesh)
     {
@@ -41,8 +33,6 @@ public class DragObject : MonoBehaviour
     void Update()
     {
         sharpness = (int)GameObject.Find("Sharpness").GetComponent<Slider>().value;
-
-        //mOld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         mNow = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mDelta = mNow - mOld;
@@ -61,7 +51,6 @@ public class DragObject : MonoBehaviour
     {
 
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        // Store offset = gameobject world pos - mouse world pos
         mOffset = gameObject.transform.position - GetMouseWorldPos();
 
         level = new List<HashSet<GameObject>>();
@@ -112,7 +101,6 @@ public class DragObject : MonoBehaviour
 
     void OnMouseDrag()
     {
-
         for (int i = 0; i < level.Count; i++)
         {
             foreach (GameObject currentEP in level[i])
@@ -120,8 +108,6 @@ public class DragObject : MonoBehaviour
                 currentEP.transform.position += (mDelta / ((1 * i) + 1));
             }
         }
-
         mesh.ReDraw();
     }
-
 }

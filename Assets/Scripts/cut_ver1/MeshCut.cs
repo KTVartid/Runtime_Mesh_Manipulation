@@ -166,10 +166,10 @@ namespace BLINDED_AM_ME
             leftSideObj.GetComponent<MeshRenderer>().materials = mats;
             rightSideObj.GetComponent<MeshRenderer>().materials = mats;
 
-            //leftSideObj.AddComponent<MeshStudy>();
+            leftSideObj.AddComponent<MeshStudy>();
             leftSideObj.AddComponent<MeshCollider>();
 
-            //rightSideObj.AddComponent<MeshStudy>();
+            rightSideObj.AddComponent<MeshStudy>();
             rightSideObj.AddComponent<MeshCollider>();
 
             leftSideObj.GetComponent<MeshStudy>().ReDraw();
