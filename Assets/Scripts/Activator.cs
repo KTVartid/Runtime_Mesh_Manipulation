@@ -10,7 +10,6 @@ public class Activator : MonoBehaviour
 
     GameObject god;
 
-
     void Start()
     {
         myRend = GetComponent<MeshRenderer>();
@@ -23,9 +22,28 @@ public class Activator : MonoBehaviour
     {
         myRend.material = active;
         transform.tag = "Active";
-        if (god.GetComponent<SelectTool>().oldButton == null)
+        if (god.GetComponent<SelectTool>().activeButton != null && god.GetComponent<SelectTool>().activeButton.GetComponent<UIIsSelected>().selected == true)
         {
-            gameObject.GetComponent<MeshStudy>().turnOnEP();
+            if (god.GetComponent<SelectTool>().activeButton.name == "EP")
+            {
+                gameObject.GetComponent<MeshStudy>().turnOnEP();
+            }
+            else if (god.GetComponent<SelectTool>().activeButton.name == "Move")
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    GameObject axle = god.GetComponent<CreateTransformationGizmos>().axles[i];
+                    axle.SetActive(true);
+                }
+            }
+            else if (god.GetComponent<SelectTool>().activeButton.name == "Rotate")
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    GameObject ring = god.GetComponent<CreateTransformationGizmos>().rings[i];
+                    ring.SetActive(true);
+                }
+            }
         }
     }
     public void deActivate()
@@ -33,5 +51,15 @@ public class Activator : MonoBehaviour
         myRend.material = inactive;
         gameObject.tag = ("IO");
         gameObject.GetComponent<MeshStudy>().turnOffEP();
+        if (god.GetComponent<SelectTool>().selectedIO.name == "Wall" && god.GetComponent<SelectTool>().UIClicked == false)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject axle = god.GetComponent<CreateTransformationGizmos>().axles[i];
+                GameObject ring = god.GetComponent<CreateTransformationGizmos>().rings[i];
+                axle.SetActive(false);
+                ring.SetActive(false);
+            }
+        }
     }
 }

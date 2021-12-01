@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-
-
 public class MeshStudy : MonoBehaviour
 {
     Mesh originalMesh;
@@ -212,7 +210,6 @@ public class MeshStudy : MonoBehaviour
             }
         }
         // return compiled list of int
-        //Debug.Log(relatedVertices.Count);
         return relatedVertices;
     }
 
@@ -225,7 +222,6 @@ public class MeshStudy : MonoBehaviour
         {
             vertices[i] = newPos;
         }
-
     }
     void Update()
     {

@@ -646,16 +646,10 @@
     <Compile Include="Assets\Scripts\SelectTool.cs" />
     <Compile Include="Assets\Scripts\UIIsSelected.cs" />
     <Compile Include="Assets\Scripts\Wall.cs" />
-    <Compile Include="Assets\Scripts\buttonScript.cs" />
     <Compile Include="Assets\Scripts\changeColor.cs" />
     <Compile Include="Assets\Scripts\cut_ver1\ExampleUseof_MeshCut.cs" />
     <Compile Include="Assets\Scripts\cut_ver1\MeshCut.cs" />
     <Compile Include="Assets\Scripts\cut_ver1\Mesh_Maker.cs" />
-    <Compile Include="Assets\Scripts\cut_ver2\Capsule.cs" />
-    <Compile Include="Assets\Scripts\cut_ver2\Lighsaber.cs" />
-    <Compile Include="Assets\Scripts\cut_ver2\Sliceable.cs" />
-    <Compile Include="Assets\Scripts\cut_ver2\Slicer.cs" />
-    <Compile Include="Assets\Scripts\cut_ver2\SlicesMetadata.cs" />
     <Compile Include="Assets\Scripts\isSelected.cs" />
     <Compile Include="Assets\Scripts\loader.cs" />
   </ItemGroup>

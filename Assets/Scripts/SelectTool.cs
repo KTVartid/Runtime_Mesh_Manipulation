@@ -14,100 +14,247 @@ public class SelectTool : MonoBehaviour
     private Material unselected;
 
     List<GameObject> objects;
-    List<GameObject> buttons;
+    public List<GameObject> buttons = new List<GameObject>();
 
     GameObject wall;
 
+    public GameObject selectedIO;
     public GameObject activeIO;
-    public GameObject old;
 
     public bool UIClicked;
+    public GameObject selectedButton;
     public GameObject activeButton;
-    public GameObject oldButton;
+
 
     Collider activeCollider;
     Vector3 activeSize;
     public Vector3 unifiedSize;
 
+    List<GameObject> transformationRings;
+    List<GameObject> transformationAxles;
 
-    private void Start()
+    public GameObject blade;
+
+    //buttons
+    public GameObject moveButton;
+    public GameObject rotateButton;
+    public GameObject editMeshButton;
+    public GameObject cutButton;
+
+    void Start()
     {
+        transformationRings = gameObject.GetComponent<CreateTransformationGizmos>().rings;
+        transformationAxles = gameObject.GetComponent<CreateTransformationGizmos>().axles;
+
         wall = GameObject.Find("Wall");
         objects = new List<GameObject>();
     }
-
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             checkClick();
-            activateButton();
+            if (UIClicked && selectedButton != null && selectedButton.GetComponent<UIIsSelected>().selected == false)
+            {
+                if (activeIO != null)
+                {
+                activeButton = selectedButton;
+                }
+                SwitchButtonState();
+                ActivateButton();
+            }
+            else if (UIClicked && selectedButton != null && selectedButton.GetComponent<UIIsSelected>().selected == true)
+            {
+                DeactivateButtons();
+                activeButton = null;
+            }
+            else if (UIClicked && selectedButton == null)
+            {
+            }
         }
     }
 
     void checkClick()
     {
-        if (activeIO != null)
+        if (selectedIO != null)
         {
-            if (activeIO.name != "Wall")
+            if (selectedIO.name != "Wall")
             {
-                activeIO.GetComponent<Activator>().Activate();
-                if (old != null)
+                if (activeButton != cutButton)
                 {
-                    old.GetComponent<Activator>().deActivate();
-                    old = activeIO;
+                    selectedIO.GetComponent<Activator>().Activate();
+                }
+
+                if (activeIO != null)
+                {
+                    activeIO.GetComponent<Activator>().deActivate();
+                    activeIO = selectedIO;
                 }
                 else
                 {
-                    old = activeIO;
+                    activeIO = selectedIO;
                 }
             }
-            else if (activeIO.name == "Wall" && old != null && UIClicked != true)
+            else if (selectedIO.name == "Wall" && activeButton == cutButton)
             {
-                old.GetComponent<Activator>().deActivate();
-                old = null;
+
+            }
+            else if (selectedIO.name == "Wall" && activeIO != null && UIClicked != true)
+            {
+                activeIO.GetComponent<Activator>().deActivate();
+                activeIO = null;
             }
         }
         objects.Clear();
     }
 
-    void activateButton()
-    {
-        if (activeButton != null && activeIO != null)
-        {
-            activeButton.GetComponent<buttonScript>().Activate();
-            if (oldButton != null)
-            {
-                oldButton.GetComponent<buttonScript>().Deactivate();
-                if (oldButton == activeButton)
-                {
-                    oldButton = null;
-                }
-                else
-                {
-                    oldButton = activeButton;
-                }
-            }
-            else if(activeButton != null)
-            {
-                oldButton = activeButton;
-            }
-        }
-    }
-
     public void fetchTargetSize()
     {
-        activeCollider = old.transform.GetComponent<Collider>();
-        activeSize = activeCollider.bounds.size;
+        if (activeIO != null)
+        {
+            activeCollider = activeIO.transform.GetComponent<Collider>();
+            activeSize = activeCollider.bounds.size;
 
-        float maxSize = Math.Max(Math.Max(activeSize.x, activeSize.y), activeSize.z);
-        float averageSize = (activeSize.x + activeSize.y + activeSize.z) / 3f;
-        unifiedSize = new Vector3(maxSize, maxSize, maxSize);
+            float maxSize = Math.Max(Math.Max(activeSize.x, activeSize.y), activeSize.z);
+            float averageSize = (activeSize.x + activeSize.y + activeSize.z) / 3f;
+            unifiedSize = new Vector3(maxSize, maxSize, maxSize);
+        }
     }
 
     private void OnMouseUp()
     {
         fetchTargetSize();
+    }
+
+    public void ActivateButton()
+    {
+        if (activeIO != null)
+        {
+
+            fetchTargetSize();
+
+            if (activeButton.name == "Move")
+            {
+                DeactivateRotate();
+                DeactivateEditMesh();
+                DeactivateCut();
+                ActivateMove();
+            }
+            else if (activeButton.name == "Rotate")
+            {
+                DeactivateMove();
+                DeactivateEditMesh();
+                DeactivateCut();
+                ActivateRotate();
+            }
+            else if (activeButton.name == "EP")
+            {
+                DeactivateMove();
+                DeactivateRotate();
+                DeactivateCut();
+                ActivateEditMesh();
+            }
+            else if (activeButton.name == "Cut")
+            {
+                DeactivateMove();
+                DeactivateRotate();
+                DeactivateEditMesh();
+                ActivateCut();
+            }
+        }
+    }
+
+    public void DeactivateButtons()
+    {
+        DeactivateMove();
+        DeactivateRotate();
+        DeactivateEditMesh();
+        DeactivateCut();
+    }
+
+    void SwitchButtonState()
+    {
+        if (selectedButton.GetComponent<UIIsSelected>().selected == true && activeIO != null)
+        {
+            selectedButton.GetComponent<UIIsSelected>().selected = false;
+        }
+        else if (selectedButton.GetComponent<UIIsSelected>().selected == false && activeIO != null)
+        {
+            selectedButton.GetComponent<UIIsSelected>().selected = true;
+        }
+    }
+
+    public void ActivateMove()
+    {
+        for (int i = 0; i < transformationAxles.Count; i++)
+        {
+            transformationAxles[i].SetActive(true);
+        }
+    }
+
+    public void ActivateRotate()
+    {
+        for (int i = 0; i < transformationAxles.Count; i++)
+        {
+            transformationRings[i].SetActive(true);
+        }
+    }
+
+    public void ActivateEditMesh()
+    {
+        activeIO.GetComponent<MeshStudy>().turnOnEP();
+    }
+
+    public void ActivateCut()
+    {
+        activeIO.GetComponent<Activator>().deActivate();
+        blade.SetActive(true);
+        blade.tag = "Active";
+        for (int i = 0; i < 2; i++)
+        {
+            transformationAxles[i].SetActive(true);
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            transformationRings[i].SetActive(true);
+        }
+    }
+
+    public void DeactivateMove()
+    {
+        for (int i = 0; i < transformationAxles.Count; i++)
+        {
+            transformationAxles[i].SetActive(false);
+        }
+        moveButton.GetComponent<UIIsSelected>().selected = false;
+    }
+
+    public void DeactivateRotate()
+    {
+        for (int i = 0; i < transformationAxles.Count; i++)
+        {
+            transformationRings[i].SetActive(false);
+        }
+        rotateButton.GetComponent<UIIsSelected>().selected = false;
+    }
+
+    public void DeactivateEditMesh()
+    {
+        activeIO.GetComponent<MeshStudy>().turnOffEP();
+        editMeshButton.GetComponent<UIIsSelected>().selected = false;
+    }
+
+    public void DeactivateCut()
+    {
+        blade.SetActive(false);
+        blade.tag = "Untagged";
+        for (int i = 0; i < 3; i++)
+        {
+            transformationAxles[i].SetActive(false);
+            transformationRings[i].SetActive(false);
+        }
+        cutButton.GetComponent<UIIsSelected>().selected = false;
     }
 }

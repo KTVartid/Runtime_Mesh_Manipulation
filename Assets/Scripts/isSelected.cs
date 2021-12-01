@@ -15,23 +15,18 @@ public class isSelected : MonoBehaviour
         god = GameObject.Find("Main Camera");
     }
 
-    private void Update()
-    {
-    }
-
-
     private void OnMouseDown()
     {
         if (gameObject.tag != "Active")
         {
             selected = true;
-            god.GetComponent<SelectTool>().activeIO = gameObject;
+            god.GetComponent<SelectTool>().selectedIO = gameObject;
         }
     }
 
     private void OnMouseUp()
     {
-        god.GetComponent<SelectTool>().activeIO = null;
+        god.GetComponent<SelectTool>().selectedIO = null;
         selected = false;
     }
 }

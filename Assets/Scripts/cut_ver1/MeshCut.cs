@@ -172,9 +172,8 @@ namespace BLINDED_AM_ME
             rightSideObj.AddComponent<MeshStudy>();
             rightSideObj.AddComponent<MeshCollider>();
 
-            leftSideObj.GetComponent<MeshStudy>().ReDraw();
-            rightSideObj.GetComponent<MeshStudy>().ReDraw();
-
+            GameObject.Find("Main Camera").GetComponent<SelectTool>().DeactivateCut();
+            GameObject.Find("Main Camera").GetComponent<SelectTool>().activeButton = null;
 
             return new GameObject[] { leftSideObj, rightSideObj };
 
